@@ -1,0 +1,9 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="referrer" content="no-referrer"><title>ClientCabinet — интеграционная проверка</title></head>
+<body>
+  <h1>Проверка API на тестовом аккаунте</h1>
+  <p>Только dev-сервер. Настоящие вход, refresh, защищённый запрос и отзыв. Токены остаются в памяти до окончания проверки. Вывод содержит только результаты проверок.</p>
+  <form id="integration"><label>E-mail <input name="email" type="email" autocomplete="off" required></label><label>Пароль <input name="password" type="password" autocomplete="off" required></label><button>Запустить проверку</button></form>
+  <pre id="result" role="status"></pre>
+  <script type="module" src="./integration.ts"></script>
+</body></html>

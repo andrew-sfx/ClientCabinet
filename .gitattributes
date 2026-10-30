@@ -1,0 +1,10 @@
+* text=auto
+.gitattributes text eol=lf
+.gitignore text eol=lf
+*.md text eol=lf
+*.json text eol=lf
+*.mjs text eol=lf
+*.pdf binary
+# Byte-exact evidence snapshots: do not normalize line endings.
+/sources/** -text whitespace=cr-at-eol
+/sources/manifest.json text eol=lf

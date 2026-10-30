@@ -1,0 +1,3516 @@
+{
+  "schemaVersion": 1,
+  "swaggerUrl": "https://api3.soft-fx.com/swagger/api/swagger.json",
+  "checkedAt": "2026-10-30T12:25:33.518Z",
+  "version": "v2.3.2.36",
+  "fullContractSha256": "287028e070835c40d5298ff6f60134302716826aa7494248dbfe74fd4265a39a",
+  "flowPaths": [
+    "/user/login/configuration",
+    "/user/login",
+    "/identity/configuration",
+    "/identity/verify",
+    "/identity/sendcode",
+    "/token",
+    "/token/revoke",
+    "/user/account/summary",
+    "/user/registration",
+    "/paymentsystem/configuration",
+    "/paymentsystem/currency",
+    "/paymentsystem/fee",
+    "/paymentsystem/amountrange",
+    "/paymentsystem/crypto/token",
+    "/paymentsystem/cryptoaddress/create",
+    "/paymentsystem/wiretransfer/bank",
+    "/paymentsystem/wiretransfer/add",
+    "/account",
+    "/user/account/balance",
+    "/user/summary",
+    "/paymentsystem/exchange/currencyrate"
+  ],
+  "flow": {
+    "openapi": "3.0.4",
+    "paths": {
+      "/account": {
+        "get": {
+          "parameters": [
+            {
+              "description": "Client's domain name",
+              "in": "query",
+              "name": "domainName",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/at.core.Models.Account"
+                  }
+                },
+                "text/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/at.core.Models.Account"
+                  }
+                },
+                "text/plain": {
+                  "schema": {
+                    "$ref": "#/components/schemas/at.core.Models.Account"
+                  }
+                }
+              },
+              "description": "OK."
+            },
+            "206": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/at.trading.model.TradingAccount"
+                  }
+                },
+                "text/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/at.trading.model.TradingAccount"
+                  }
+                },
+                "text/plain": {
+                  "schema": {
+                    "$ref": "#/components/schemas/at.trading.model.TradingAccount"
+                  }
+                }
+              },
+              "description": "Partial Content"
+            },
+            "400": {
+              "description": "Bad Request. The request could not be understood by the server due to errors."
+            },
+            "401": {
+              "description": "Unauthorized. The request requires user authentication."
+            },
+            "500": {
+              "description": "Internal Server Error. The server encountered an unexpected condition which prevented it from fulfilling the request."
+            }
+          },
+          "summary": "User accounts \nNote: HTTP status code 206 only for Swagger",
+          "tags": [
+            "Account"
+          ]
+        }
+      },
+      "/identity/configuration": {
+        "get": {
+          "parameters": [
+            {
+              "in": "query",
+              "name": "operationCode",
+              "schema": {
+                "$ref": "#/components/schemas/portal.user.identity.configuration.Enums.MultiFactorParameter"
+              }
+            },
+            {
+              "in": "query",
+              "name": "financeOperationTypeName",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "in": "query",
+              "name": "paymentTypeCode",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "in": "query",
+              "name": "paymentOptionCode",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "in": "query",
+              "name": "paymentRouteCode",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "in": "query",
+              "name": "merchantCode",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "Identity factor (if specified, method returns only configurations for higher factors)",
+              "in": "query",
+              "name": "identityFactorCode",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "Pass URL-encoded (!!!) MFA state to get factors left",
+              "in": "query",
+              "name": "state",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "Client's domain name",
+              "in": "query",
+              "name": "domainName",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/portal.module.auth.api.Models.v2.MultiFactorConfigurationResponseModel"
+                  }
+                },
+                "text/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/portal.module.auth.api.Models.v2.MultiFactorConfigurationResponseModel"
+                  }
+                },
+                "text/plain": {
+                  "schema": {
+                    "$ref": "#/components/schemas/portal.module.auth.api.Models.v2.MultiFactorConfigurationResponseModel"
+                  }
+                }
+              },
+              "description": "Ok. The request was processed successfully."
+            },
+            "400": {
+              "description": "Bad Request. The request could not be understood by the server due to errors."
+            },
+            "401": {
+              "description": "Unauthorized.The request requires user authentication."
+            },
+            "500": {
+              "description": "Internal Server Error. The server encountered an unexpected condition which prevented it from fulfilling the request."
+            }
+          },
+          "summary": "MFA configuration: get the list of currently configured Identity factors",
+          "tags": [
+            "Identity"
+          ]
+        },
+        "post": {
+          "parameters": [
+            {
+              "in": "query",
+              "name": "operationCode",
+              "schema": {
+                "$ref": "#/components/schemas/portal.user.identity.configuration.Enums.MultiFactorParameter"
+              }
+            },
+            {
+              "in": "query",
+              "name": "financeOperationTypeName",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "in": "query",
+              "name": "paymentTypeCode",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "in": "query",
+              "name": "paymentOptionCode",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "in": "query",
+              "name": "paymentRouteCode",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "in": "query",
+              "name": "merchantCode",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "Identity factor (if specified, method returns only configurations for higher factors)",
+              "in": "query",
+              "name": "identityFactorCode",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "Pass URL-encoded (!!!) MFA state to get factors left",
+              "in": "query",
+              "name": "state",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "Client's domain name",
+              "in": "query",
+              "name": "domainName",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/portal.module.auth.api.Models.v2.MultiFactorConfigurationResponseModel"
+                  }
+                },
+                "text/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/portal.module.auth.api.Models.v2.MultiFactorConfigurationResponseModel"
+                  }
+                },
+                "text/plain": {
+                  "schema": {
+                    "$ref": "#/components/schemas/portal.module.auth.api.Models.v2.MultiFactorConfigurationResponseModel"
+                  }
+                }
+              },
+              "description": "Ok. The request was processed successfully."
+            },
+            "400": {
+              "description": "Bad Request. The request could not be understood by the server due to errors."
+            },
+            "401": {
+              "description": "Unauthorized.The request requires user authentication."
+            },
+            "500": {
+              "description": "Internal Server Error. The server encountered an unexpected condition which prevented it from fulfilling the request."
+            }
+          },
+          "summary": "MFA configuration: get the list of currently configured Identity factors",
+          "tags": [
+            "Identity"
+          ]
+        }
+      },
+      "/identity/sendcode": {
+        "post": {
+          "requestBody": {
+            "content": {
+              "application/*+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/portal.module.notifications.Models.SendCodeModel"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/portal.module.notifications.Models.SendCodeModel"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/portal.module.notifications.Models.SendCodeModel"
+                }
+              }
+            },
+            "description": ""
+          },
+          "responses": {
+            "200": {
+              "description": "Ok. Request completed successfully."
+            },
+            "400": {
+              "description": "Bad Request. The request could not be understood by the server due to errors."
+            },
+            "401": {
+              "description": "Unauthorized. The request requires user authentication."
+            },
+            "500": {
+              "description": "Internal Server Error. The server encountered an unexpected condition which prevented it from fulfilling the request."
+            }
+          },
+          "summary": "Send code via email or SMS",
+          "tags": [
+            "Identity"
+          ]
+        }
+      },
+      "/identity/verify": {
+        "post": {
+          "requestBody": {
+            "content": {
+              "application/*+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/portal.module.auth.api.Models.v2.VerifyFactorModel"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/portal.module.auth.api.Models.v2.VerifyFactorModel"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/portal.module.auth.api.Models.v2.VerifyFactorModel"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/portal.module.auth.Models.MultiFactorModel"
+                  }
+                },
+                "text/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/portal.module.auth.Models.MultiFactorModel"
+                  }
+                },
+                "text/plain": {
+                  "schema": {
+                    "$ref": "#/components/schemas/portal.module.auth.Models.MultiFactorModel"
+                  }
+                }
+              },
+              "description": "Ok. The request was processed successfully."
+            },
+            "400": {
+              "description": "Bad Request. The request could not be understood by the server due to errors."
+            },
+            "401": {
+              "description": "Unauthorized.The request requires user authentication."
+            },
+            "500": {
+              "description": "Internal Server Error. The server encountered an unexpected condition which prevented it from fulfilling the request."
+            }
+          },
+          "summary": "MFA: Verifies the Identity factor. If the client receives MULTI_FACTOR_REQUIRED error code and the state parameter in a response of any method, that means that the Identity factors must be passed. The obtained state should be passed to GET /Identity/Configuration in order to get the list of currently configured authentication factors. These factors should be sequentially verified by calling POST /Identity/Verify, which updates the current state on each step. In case a verification code needs to be sent to the user by email or SMS, the client should also call POST v3/Identity/Verify/SendCode. The state that the client obtained as the result of the last factor verification is a final MFA state, which the desired API method expects",
+          "tags": [
+            "Identity"
+          ]
+        }
+      },
+      "/paymentsystem/amountrange": {
+        "get": {
+          "description": "Gives actual information about amount ranges.",
+          "parameters": [
+            {
+              "description": "Payment type name",
+              "in": "query",
+              "name": "paymentType",
+              "schema": {
+                "default": "",
+                "type": "string"
+              }
+            },
+            {
+              "description": "Way of payment according to paymentType",
+              "in": "query",
+              "name": "paymentOption",
+              "schema": {
+                "default": "",
+                "type": "string"
+              }
+            },
+            {
+              "description": "Payment direction",
+              "in": "query",
+              "name": "paymentRoute",
+              "schema": {
+                "default": "",
+                "type": "string"
+              }
+            },
+            {
+              "description": "Type of balance operation (Credit/Debit)",
+              "in": "query",
+              "name": "balanceOperationType",
+              "schema": {
+                "default": "",
+                "type": "string"
+              }
+            },
+            {
+              "description": "ISO currency code of payment",
+              "in": "query",
+              "name": "currencyCode",
+              "schema": {
+                "default": "",
+                "type": "string"
+              }
+            },
+            {
+              "description": "Country code (ISO 3166-1 alpha-2)",
+              "in": "query",
+              "name": "countryCode",
+              "schema": {
+                "default": "",
+                "type": "string"
+              }
+            },
+            {
+              "description": "Domain name",
+              "in": "query",
+              "name": "domainName",
+              "schema": {
+                "default": "",
+                "type": "string"
+              }
+            },
+            {
+              "description": "Bank name",
+              "in": "query",
+              "name": "bankName",
+              "schema": {
+                "default": "",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/finance.transfer.Models.AmountRangeResponseModel"
+                  }
+                },
+                "text/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/finance.transfer.Models.AmountRangeResponseModel"
+                  }
+                },
+                "text/plain": {
+                  "schema": {
+                    "$ref": "#/components/schemas/finance.transfer.Models.AmountRangeResponseModel"
+                  }
+                }
+              },
+              "description": "Amount range boundaries."
+            },
+            "400": {
+              "description": "Bad Request. The request could not be understood by the server due to errors."
+            },
+            "401": {
+              "description": "Unauthorized.The request requires user authentication."
+            },
+            "405": {
+              "description": "Method Not Allowed. The method defined in the URL is not allowed for the specified resource."
+            },
+            "500": {
+              "description": "Internal Server Error. The server encountered an unexpected condition which prevented it from fulfilling the request."
+            }
+          },
+          "summary": "Payment amount range",
+          "tags": [
+            "Payment Systems"
+          ]
+        }
+      },
+      "/paymentsystem/configuration": {
+        "get": {
+          "description": "All parameters are optional. Client may pass any parameter combination to filter out the desired records.",
+          "parameters": [
+            {
+              "description": "Add/Notify/Withdraw",
+              "in": "query",
+              "name": "financeOperationTypeName",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "in": "query",
+              "name": "merchantCode",
+              "schema": {
+                "deprecated": true,
+                "type": "string"
+              }
+            },
+            {
+              "in": "query",
+              "name": "paymentTypeCode",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "in": "query",
+              "name": "paymentOptionCode",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "in": "query",
+              "name": "paymentRouteCode",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "in": "query",
+              "name": "paymentGroupCode",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "Country code (ISO 3166-1 alpha-2)",
+              "in": "query",
+              "name": "countryCode",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "Currency code (ISO 4217)",
+              "in": "query",
+              "name": "currencyCode",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "No filter by default",
+              "in": "query",
+              "name": "isAggregator",
+              "schema": {
+                "type": "boolean"
+              }
+            },
+            {
+              "description": "No filter by default",
+              "in": "query",
+              "name": "isExternal",
+              "schema": {
+                "type": "boolean"
+              }
+            },
+            {
+              "description": "No filter by default",
+              "in": "query",
+              "name": "isVisible",
+              "schema": {
+                "type": "boolean"
+              }
+            },
+            {
+              "description": "False by default",
+              "in": "query",
+              "name": "checkGrade",
+              "schema": {
+                "type": "boolean"
+              }
+            },
+            {
+              "description": "Client's domain name",
+              "in": "query",
+              "name": "domainName",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "items": {
+                      "$ref": "#/components/schemas/finance.transfer.api.model.PaymentConfigurationModel"
+                    },
+                    "type": "array"
+                  }
+                },
+                "text/json": {
+                  "schema": {
+                    "items": {
+                      "$ref": "#/components/schemas/finance.transfer.api.model.PaymentConfigurationModel"
+                    },
+                    "type": "array"
+                  }
+                },
+                "text/plain": {
+                  "schema": {
+                    "items": {
+                      "$ref": "#/components/schemas/finance.transfer.api.model.PaymentConfigurationModel"
+                    },
+                    "type": "array"
+                  }
+                }
+              },
+              "description": "Ok. Request completed successfully."
+            },
+            "400": {
+              "description": "Bad Request. The request could not be understood by the server due to errors."
+            },
+            "401": {
+              "description": "Unauthorized. The request requires user authentication."
+            },
+            "500": {
+              "description": "Internal Server Error. The server encountered an unexpected condition which prevented it from fulfilling the request."
+            }
+          },
+          "summary": "Payment Configuration: Methods",
+          "tags": [
+            "Payment Configuration"
+          ]
+        }
+      },
+      "/paymentsystem/crypto/token": {
+        "get": {
+          "parameters": [
+            {
+              "in": "query",
+              "name": "merchantCode",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "in": "query",
+              "name": "paymentTypeCode",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "in": "query",
+              "name": "paymentOptionCode",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "in": "query",
+              "name": "paymentRouteCode",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "in": "query",
+              "name": "currencyCode",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "in": "query",
+              "name": "cryptoTokenStandardCode",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "Client's domain name",
+              "in": "query",
+              "name": "domainName",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "items": {
+                      "$ref": "#/components/schemas/portal.ps.crypto.configuration.api.v2.CryptoToken"
+                    },
+                    "type": "array"
+                  }
+                },
+                "text/json": {
+                  "schema": {
+                    "items": {
+                      "$ref": "#/components/schemas/portal.ps.crypto.configuration.api.v2.CryptoToken"
+                    },
+                    "type": "array"
+                  }
+                },
+                "text/plain": {
+                  "schema": {
+                    "items": {
+                      "$ref": "#/components/schemas/portal.ps.crypto.configuration.api.v2.CryptoToken"
+                    },
+                    "type": "array"
+                  }
+                }
+              },
+              "description": "Ok. Request completed successfully."
+            },
+            "400": {
+              "description": "Bad Request. The request could not be understood by the server due to errors."
+            },
+            "401": {
+              "description": "Unauthorized. The request requires user authentication."
+            },
+            "500": {
+              "description": "Internal Server Error. The server encountered an unexpected condition which prevented it from fulfilling the request."
+            }
+          },
+          "summary": "Crypto tokens",
+          "tags": [
+            "Payment Systems"
+          ]
+        }
+      },
+      "/paymentsystem/cryptoaddress/create": {
+        "post": {
+          "description": "Delayed finance operation and chain creation",
+          "requestBody": {
+            "content": {
+              "application/*+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/portal.ps.crypto.api.model.CryptoAddressCreate"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/portal.ps.crypto.api.model.CryptoAddressCreate"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/portal.ps.crypto.api.model.CryptoAddressCreate"
+                }
+              }
+            },
+            "description": ""
+          },
+          "responses": {
+            "200": {
+              "description": "Ok. Request completed successfully."
+            },
+            "400": {
+              "description": "Bad Request. The request could not be understood by the server due to errors."
+            },
+            "401": {
+              "description": "Unauthorized. The request requires user authentication."
+            },
+            "500": {
+              "description": "Internal Server Error. The server encountered an unexpected condition which prevented it from fulfilling the request."
+            }
+          },
+          "summary": "Crypto address: Request for deposit",
+          "tags": [
+            "Payment Systems"
+          ]
+        }
+      },
+      "/paymentsystem/currency": {
+        "get": {
+          "description": "All parameters are optional. Client may pass any parameter combination to filter out the desired records.",
+          "parameters": [
+            {
+              "description": "Add/Notice/Withdraw",
+              "in": "query",
+              "name": "financeOperationTypeName",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "in": "query",
+              "name": "merchantCode",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "in": "query",
+              "name": "paymentGroupCode",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "in": "query",
+              "name": "paymentTypeCode",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "in": "query",
+              "name": "paymentOptionCode",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "in": "query",
+              "name": "paymentRouteCode",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "Country code (ISO 3166-1 alpha-2)",
+              "in": "query",
+              "name": "countryCode",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "Currency code (ISO 4217) - if specified for withdrawal, response will include only those currencies which account currency is allowed to be converted to",
+              "in": "query",
+              "name": "accountCurrencyCode",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "Client's domain name",
+              "in": "query",
+              "name": "domainName",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "items": {
+                      "$ref": "#/components/schemas/at.core.Models.CurrencyModel"
+                    },
+                    "type": "array"
+                  }
+                },
+                "text/json": {
+                  "schema": {
+                    "items": {
+                      "$ref": "#/components/schemas/at.core.Models.CurrencyModel"
+                    },
+                    "type": "array"
+                  }
+                },
+                "text/plain": {
+                  "schema": {
+                    "items": {
+                      "$ref": "#/components/schemas/at.core.Models.CurrencyModel"
+                    },
+                    "type": "array"
+                  }
+                }
+              },
+              "description": "Ok. Request completed successfully."
+            },
+            "400": {
+              "description": "Bad Request. The request could not be understood by the server due to errors."
+            },
+            "401": {
+              "description": "Unauthorized. The request requires user authentication."
+            },
+            "500": {
+              "description": "Internal Server Error. The server encountered an unexpected condition which prevented it from fulfilling the request."
+            }
+          },
+          "summary": "Payment Configuration: Currencies",
+          "tags": [
+            "Payment Configuration"
+          ]
+        }
+      },
+      "/paymentsystem/exchange/currencyrate": {
+        "get": {
+          "parameters": [
+            {
+              "description": "Base currency",
+              "in": "query",
+              "name": "currencyCodeFrom",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "Quote currency",
+              "in": "query",
+              "name": "currencyCodeTo",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "Is need to forward",
+              "in": "query",
+              "name": "isForward",
+              "schema": {
+                "type": "boolean"
+              }
+            },
+            {
+              "description": "Client's domain name",
+              "in": "query",
+              "name": "domainName",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/finance.conversion.Models.CurrencyRate.CurrencyRateInfoModel"
+                  }
+                },
+                "text/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/finance.conversion.Models.CurrencyRate.CurrencyRateInfoModel"
+                  }
+                },
+                "text/plain": {
+                  "schema": {
+                    "$ref": "#/components/schemas/finance.conversion.Models.CurrencyRate.CurrencyRateInfoModel"
+                  }
+                }
+              },
+              "description": "OK"
+            }
+          },
+          "summary": "Currency rate api v2",
+          "tags": [
+            "Payment Systems"
+          ]
+        }
+      },
+      "/paymentsystem/fee": {
+        "get": {
+          "description": "For specified payment context returns the final result of fee configuration aggregation which will be applied to the payment.\nHow to calculate fee:\n1) fee = (amount * percent) + constant; \n2.1) if fee is less than min value, return min value; \n2.2) else if max value is set and fee is greater than max value, return max value;\n2.3) else return fee.",
+          "parameters": [
+            {
+              "description": "Add/Notice/Withdraw",
+              "in": "query",
+              "name": "financeOperationTypeName",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "in": "query",
+              "name": "merchantCode",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "in": "query",
+              "name": "paymentTypeCode",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "in": "query",
+              "name": "paymentOptionCode",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "in": "query",
+              "name": "paymentRouteCode",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "Country code (ISO 3166-1 alpha-2).\nIf not set, a country from user's personal profile will be used.",
+              "in": "query",
+              "name": "countryCode",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "Currency code (ISO 4217)",
+              "in": "query",
+              "name": "currencyCode",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "Client's domain name",
+              "in": "query",
+              "name": "domainName",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "items": {
+                      "$ref": "#/components/schemas/finance.transfer.api.model.FeeConfigurationModel"
+                    },
+                    "type": "array"
+                  }
+                },
+                "text/json": {
+                  "schema": {
+                    "items": {
+                      "$ref": "#/components/schemas/finance.transfer.api.model.FeeConfigurationModel"
+                    },
+                    "type": "array"
+                  }
+                },
+                "text/plain": {
+                  "schema": {
+                    "items": {
+                      "$ref": "#/components/schemas/finance.transfer.api.model.FeeConfigurationModel"
+                    },
+                    "type": "array"
+                  }
+                }
+              },
+              "description": "Ok. Request completed successfully."
+            },
+            "400": {
+              "description": "Bad Request. The request could not be understood by the server due to errors."
+            },
+            "401": {
+              "description": "Unauthorized. The request requires user authentication."
+            },
+            "500": {
+              "description": "Internal Server Error. The server encountered an unexpected condition which prevented it from fulfilling the request."
+            }
+          },
+          "summary": "Payment Configuration: Fees",
+          "tags": [
+            "Payment Configuration"
+          ]
+        }
+      },
+      "/paymentsystem/wiretransfer/add": {
+        "post": {
+          "requestBody": {
+            "content": {
+              "application/*+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/portal.ps.wire.api.v3.AddModel"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/portal.ps.wire.api.v3.AddModel"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/portal.ps.wire.api.v3.AddModel"
+                }
+              }
+            },
+            "description": ""
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/portal.ps.wire.api.v3.AddResult"
+                  }
+                },
+                "text/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/portal.ps.wire.api.v3.AddResult"
+                  }
+                },
+                "text/plain": {
+                  "schema": {
+                    "$ref": "#/components/schemas/portal.ps.wire.api.v3.AddResult"
+                  }
+                }
+              },
+              "description": "OK"
+            }
+          },
+          "summary": "WireTransfer: Add",
+          "tags": [
+            "Payment Systems"
+          ]
+        }
+      },
+      "/paymentsystem/wiretransfer/bank": {
+        "get": {
+          "parameters": [
+            {
+              "in": "query",
+              "name": "balanceOperationTypeName",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "in": "query",
+              "name": "countryCode",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "in": "query",
+              "name": "currencyCode",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "Payment type name",
+              "in": "query",
+              "name": "paymentType",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "Payment option code",
+              "in": "query",
+              "name": "paymentOption",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "Payment route name",
+              "in": "query",
+              "name": "paymentRoute",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "Merchant code",
+              "in": "query",
+              "name": "merchant",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "Client's domain name",
+              "in": "query",
+              "name": "domainName",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/portal.ps.wire.api.model.BanksResponseModel"
+                  }
+                },
+                "text/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/portal.ps.wire.api.model.BanksResponseModel"
+                  }
+                },
+                "text/plain": {
+                  "schema": {
+                    "$ref": "#/components/schemas/portal.ps.wire.api.model.BanksResponseModel"
+                  }
+                }
+              },
+              "description": "OK."
+            },
+            "400": {
+              "description": "Bad Request. The request could not be understood by the server due to errors."
+            },
+            "405": {
+              "description": "Method Not Allowed. The method defined in the URL is not allowed for the specified resource."
+            },
+            "500": {
+              "description": "Internal Server Error. The server encountered an unexpected condition which prevented it from fulfilling the request."
+            }
+          },
+          "summary": "WireTransfer: Banks",
+          "tags": [
+            "Payment Systems"
+          ]
+        }
+      },
+      "/token": {
+        "post": {
+          "responses": {
+            "200": {
+              "description": "OK"
+            }
+          },
+          "tags": [
+            "Authorization"
+          ]
+        }
+      },
+      "/token/revoke": {
+        "post": {
+          "responses": {
+            "200": {
+              "description": "OK."
+            },
+            "400": {
+              "description": "Bad Request. The request could not be understood by the server due to errors."
+            },
+            "401": {
+              "description": "Unauthorized. The request requires user authentication."
+            },
+            "405": {
+              "description": "Method Not Allowed. The method defined in the URL is not allowed for the specified resource."
+            },
+            "500": {
+              "description": "Internal Server Error. The server encountered an unexpected condition which prevented it from fulfilling the request."
+            }
+          },
+          "summary": "Revoke Token",
+          "tags": [
+            "Identity"
+          ]
+        }
+      },
+      "/user/account/balance": {
+        "get": {
+          "parameters": [
+            {
+              "description": "Account number - if not specified, method returns main account balance",
+              "in": "query",
+              "name": "account",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "Currency code (ISO 4217) - if not specified, method returns balances for all existing pockets",
+              "in": "query",
+              "name": "currencyCode",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "Client's domain name",
+              "in": "query",
+              "name": "domainName",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "items": {
+                      "$ref": "#/components/schemas/finance.transfer.Models.BalanceResponseModel"
+                    },
+                    "type": "array"
+                  }
+                },
+                "text/json": {
+                  "schema": {
+                    "items": {
+                      "$ref": "#/components/schemas/finance.transfer.Models.BalanceResponseModel"
+                    },
+                    "type": "array"
+                  }
+                },
+                "text/plain": {
+                  "schema": {
+                    "items": {
+                      "$ref": "#/components/schemas/finance.transfer.Models.BalanceResponseModel"
+                    },
+                    "type": "array"
+                  }
+                }
+              },
+              "description": "Ok. Request completed successfully."
+            },
+            "400": {
+              "description": "Bad Request. The request could not be understood by the server due to errors."
+            },
+            "401": {
+              "description": "Unauthorized. The request requires user authentication."
+            },
+            "500": {
+              "description": "Internal Server Error. The server encountered an unexpected condition which prevented it from fulfilling the request."
+            }
+          },
+          "summary": "Account balance",
+          "tags": [
+            "User"
+          ]
+        }
+      },
+      "/user/account/summary": {
+        "post": {
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/oauth.core.Models.UserInfo.UserInfoViewModel"
+                  }
+                },
+                "text/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/oauth.core.Models.UserInfo.UserInfoViewModel"
+                  }
+                },
+                "text/plain": {
+                  "schema": {
+                    "$ref": "#/components/schemas/oauth.core.Models.UserInfo.UserInfoViewModel"
+                  }
+                }
+              },
+              "description": "OK"
+            }
+          },
+          "summary": "User/Account/Summary method instead of Account/UserInfo",
+          "tags": [
+            "User"
+          ]
+        }
+      },
+      "/user/login": {
+        "post": {
+          "requestBody": {
+            "content": {
+              "application/*+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/portal.user.login.api.model.AuthorizeModel"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/portal.user.login.api.model.AuthorizeModel"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/portal.user.login.api.model.AuthorizeModel"
+                }
+              }
+            },
+            "description": ""
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/portal.module.auth.Models.v3.TicketModel"
+                  }
+                },
+                "text/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/portal.module.auth.Models.v3.TicketModel"
+                  }
+                },
+                "text/plain": {
+                  "schema": {
+                    "$ref": "#/components/schemas/portal.module.auth.Models.v3.TicketModel"
+                  }
+                }
+              },
+              "description": "Token issued successfully"
+            }
+          },
+          "summary": "Login",
+          "tags": [
+            "User"
+          ]
+        }
+      },
+      "/user/login/configuration": {
+        "get": {
+          "parameters": [
+            {
+              "description": "Client's domain name",
+              "in": "query",
+              "name": "domainName",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "items": {
+                      "$ref": "#/components/schemas/portal.user.login.api.model.LoginConfigurationModel"
+                    },
+                    "type": "array"
+                  }
+                },
+                "text/json": {
+                  "schema": {
+                    "items": {
+                      "$ref": "#/components/schemas/portal.user.login.api.model.LoginConfigurationModel"
+                    },
+                    "type": "array"
+                  }
+                },
+                "text/plain": {
+                  "schema": {
+                    "items": {
+                      "$ref": "#/components/schemas/portal.user.login.api.model.LoginConfigurationModel"
+                    },
+                    "type": "array"
+                  }
+                }
+              },
+              "description": "Ok. The request is completed successfully."
+            },
+            "400": {
+              "description": "Bad Request. The request could not be understood by the server due to errors."
+            },
+            "500": {
+              "description": "Internal Server Error. The server encountered an unexpected condition which prevented it from fulfilling the request."
+            }
+          },
+          "summary": "Login options",
+          "tags": [
+            "User"
+          ]
+        }
+      },
+      "/user/registration": {
+        "post": {
+          "requestBody": {
+            "content": {
+              "application/*+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/portal.module.registration.user.api.v2.StartRegistrationRequestModel"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/portal.module.registration.user.api.v2.StartRegistrationRequestModel"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/portal.module.registration.user.api.v2.StartRegistrationRequestModel"
+                }
+              }
+            },
+            "description": ""
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/portal.module.registration.user.api.v2.IdentityRegistrationResponseModel"
+                  }
+                },
+                "text/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/portal.module.registration.user.api.v2.IdentityRegistrationResponseModel"
+                  }
+                },
+                "text/plain": {
+                  "schema": {
+                    "$ref": "#/components/schemas/portal.module.registration.user.api.v2.IdentityRegistrationResponseModel"
+                  }
+                }
+              },
+              "description": "Ok."
+            },
+            "400": {
+              "description": "Bad Request. The request could not be understood by the server due to errors."
+            },
+            "500": {
+              "description": "Internal Server Error. The server encountered an unexpected condition which prevented it from fulfilling the request."
+            }
+          },
+          "summary": "User: Start registration",
+          "tags": [
+            "User"
+          ]
+        }
+      },
+      "/user/summary": {
+        "get": {
+          "description": "Gives full user summary information.",
+          "parameters": [
+            {
+              "description": "Client's domain name",
+              "in": "query",
+              "name": "domainName",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/portal.user.settings.api.v1.UserSummaryResponseModel"
+                  }
+                },
+                "text/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/portal.user.settings.api.v1.UserSummaryResponseModel"
+                  }
+                },
+                "text/plain": {
+                  "schema": {
+                    "$ref": "#/components/schemas/portal.user.settings.api.v1.UserSummaryResponseModel"
+                  }
+                }
+              },
+              "description": ""
+            },
+            "400": {
+              "description": "Bad Request. The request could not be understood by the server due to errors."
+            },
+            "401": {
+              "description": "Unauthorized.The request requires user authentication."
+            },
+            "500": {
+              "description": "Internal Server Error. The server encountered an unexpected condition which prevented it from fulfilling the request."
+            }
+          },
+          "summary": "User summary information",
+          "tags": [
+            "User"
+          ]
+        }
+      }
+    },
+    "references": {
+      "#/components/schemas/System.Collections.Generic.KeyValuePair`2[System.Guid,System.String]": {
+        "additionalProperties": false,
+        "properties": {
+          "key": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "value": {
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "#/components/schemas/at.core.Models.Account": {
+        "additionalProperties": false,
+        "properties": {
+          "created": {
+            "format": "date-time",
+            "nullable": true,
+            "type": "string"
+          },
+          "currencies": {
+            "items": {
+              "$ref": "#/components/schemas/at.core.Models.CurrencyModel"
+            },
+            "nullable": true,
+            "type": "array"
+          },
+          "domain": {
+            "$ref": "#/components/schemas/portal.core.Models.Domain"
+          },
+          "isEnabled": {
+            "nullable": true,
+            "type": "boolean"
+          },
+          "number": {
+            "nullable": true,
+            "type": "string"
+          },
+          "type": {
+            "$ref": "#/components/schemas/at.core.Models.AccountType"
+          },
+          "user": {
+            "$ref": "#/components/schemas/portal.user.User"
+          }
+        },
+        "type": "object"
+      },
+      "#/components/schemas/at.core.Models.AccountType": {
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "#/components/schemas/at.core.Models.CurrencyModel": {
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "description": "Currency code (ISO 4217)",
+            "nullable": true,
+            "type": "string"
+          },
+          "cryptoTokenStandards": {
+            "description": "",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true,
+            "type": "array"
+          },
+          "group": {
+            "description": "Currency group (Crypto/Fiat/etc.)",
+            "nullable": true,
+            "type": "string"
+          },
+          "name": {
+            "description": "Official currency name",
+            "nullable": true,
+            "type": "string"
+          },
+          "precision": {
+            "description": "Specifies how many digits to the right of the decimal points should be reported",
+            "format": "int32",
+            "type": "integer"
+          }
+        },
+        "type": "object"
+      },
+      "#/components/schemas/at.trading.model.TradingAccount": {
+        "additionalProperties": false,
+        "properties": {
+          "created": {
+            "format": "date-time",
+            "nullable": true,
+            "type": "string"
+          },
+          "currencies": {
+            "items": {
+              "$ref": "#/components/schemas/at.core.Models.CurrencyModel"
+            },
+            "nullable": true,
+            "type": "array"
+          },
+          "domain": {
+            "$ref": "#/components/schemas/portal.core.Models.Domain"
+          },
+          "isArchived": {
+            "type": "boolean"
+          },
+          "isDemo": {
+            "type": "boolean"
+          },
+          "isEnabled": {
+            "nullable": true,
+            "type": "boolean"
+          },
+          "key": {
+            "format": "int64",
+            "type": "integer"
+          },
+          "leverage": {
+            "$ref": "#/components/schemas/portal.module.leverage.Leverage"
+          },
+          "link": {
+            "nullable": true,
+            "type": "string"
+          },
+          "number": {
+            "nullable": true,
+            "type": "string"
+          },
+          "password": {
+            "nullable": true,
+            "type": "string"
+          },
+          "platform": {
+            "$ref": "#/components/schemas/tp.core.TradingPlatform"
+          },
+          "product": {
+            "$ref": "#/components/schemas/tp.core.TradingProduct"
+          },
+          "type": {
+            "$ref": "#/components/schemas/at.core.Models.AccountType"
+          },
+          "user": {
+            "$ref": "#/components/schemas/portal.user.User"
+          }
+        },
+        "type": "object"
+      },
+      "#/components/schemas/finance.configuration.Models.PaymentGroup": {
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "nullable": true,
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "isCustom": {
+            "type": "boolean"
+          },
+          "name": {
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "#/components/schemas/finance.conversion.Models.CurrencyRate.CurrencyRateInfoModel": {
+        "additionalProperties": false,
+        "properties": {
+          "currencyCodeFrom": {
+            "nullable": true,
+            "type": "string"
+          },
+          "currencyCodeTo": {
+            "nullable": true,
+            "type": "string"
+          },
+          "isConfigurationMissing": {
+            "type": "boolean"
+          },
+          "isForward": {
+            "type": "boolean"
+          },
+          "isRateMissing": {
+            "type": "boolean"
+          },
+          "rateValue": {
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "#/components/schemas/finance.transfer.Models.AmountRangeResponseModel": {
+        "additionalProperties": false,
+        "properties": {
+          "max": {
+            "description": "Upper amount boundary of the payment",
+            "format": "double",
+            "type": "number"
+          },
+          "min": {
+            "description": "Lower amount boundary of the payment",
+            "format": "double",
+            "type": "number"
+          }
+        },
+        "type": "object"
+      },
+      "#/components/schemas/finance.transfer.Models.BalanceResponseModel": {
+        "additionalProperties": false,
+        "properties": {
+          "account_id": {
+            "description": "Account Id",
+            "format": "uuid",
+            "type": "string"
+          },
+          "available": {
+            "description": "Amount available for trading or transfer to main account",
+            "format": "double",
+            "type": "number"
+          },
+          "currency": {
+            "$ref": "#/components/schemas/finance.transfer.api.model.Finance.CurrencyModel"
+          },
+          "currencyRate": {
+            "description": "Rate between default domain currency and specified currency",
+            "format": "double",
+            "nullable": true,
+            "type": "number"
+          },
+          "defaultDomainCurrencyCode": {
+            "nullable": true,
+            "type": "string"
+          },
+          "reserved": {
+            "description": "Amount reserved for active orders or incomplete transfers to main account",
+            "format": "double",
+            "type": "number"
+          }
+        },
+        "type": "object"
+      },
+      "#/components/schemas/finance.transfer.api.model.FeeConfigurationModel": {
+        "additionalProperties": false,
+        "properties": {
+          "constant": {
+            "description": "Constant fee (in specified currency)",
+            "format": "double",
+            "type": "number"
+          },
+          "currency": {
+            "$ref": "#/components/schemas/at.core.Models.CurrencyModel"
+          },
+          "maxValue": {
+            "description": "Maximum fee (in specified currency)",
+            "format": "double",
+            "nullable": true,
+            "type": "number"
+          },
+          "minValue": {
+            "description": "Minimum fee (in specified currency)",
+            "format": "double",
+            "type": "number"
+          },
+          "percent": {
+            "description": "Percentage fee (in specified currency)",
+            "format": "double",
+            "type": "number"
+          }
+        },
+        "type": "object"
+      },
+      "#/components/schemas/finance.transfer.api.model.Finance.CurrencyModel": {
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "description": "Currency code (ISO 4217)",
+            "nullable": true,
+            "type": "string"
+          },
+          "cryptoTokenStandards": {
+            "description": "",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true,
+            "type": "array"
+          },
+          "group": {
+            "description": "Currency group (Crypto/Fiat/etc.)",
+            "nullable": true,
+            "type": "string"
+          },
+          "isRequired": {
+            "type": "boolean"
+          },
+          "name": {
+            "description": "Official currency name",
+            "nullable": true,
+            "type": "string"
+          },
+          "precision": {
+            "description": "Specifies how many digits to the right of the decimal points should be reported",
+            "format": "int32",
+            "type": "integer"
+          }
+        },
+        "type": "object"
+      },
+      "#/components/schemas/finance.transfer.api.model.PaymentConfigurationModel": {
+        "additionalProperties": false,
+        "properties": {
+          "currencies": {
+            "items": {
+              "$ref": "#/components/schemas/at.core.Models.CurrencyModel"
+            },
+            "nullable": true,
+            "type": "array"
+          },
+          "financeOperationTypeName": {
+            "nullable": true,
+            "type": "string"
+          },
+          "isAggregator": {
+            "type": "boolean"
+          },
+          "isExternal": {
+            "nullable": true,
+            "type": "boolean"
+          },
+          "isOpened": {
+            "type": "boolean"
+          },
+          "isVisible": {
+            "type": "boolean"
+          },
+          "merchantCode": {
+            "nullable": true,
+            "type": "string"
+          },
+          "minConfirmationsCount": {
+            "format": "int32",
+            "nullable": true,
+            "type": "integer"
+          },
+          "order": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "paymentGroupCodes": {
+            "deprecated": true,
+            "description": "OBSOLETE!!! Use data from `paymentGroups` instead!",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true,
+            "type": "array"
+          },
+          "paymentGroups": {
+            "items": {
+              "$ref": "#/components/schemas/finance.configuration.Models.PaymentGroup"
+            },
+            "nullable": true,
+            "type": "array"
+          },
+          "paymentOptionCode": {
+            "nullable": true,
+            "type": "string"
+          },
+          "paymentRouteCode": {
+            "nullable": true,
+            "type": "string"
+          },
+          "paymentTypeCode": {
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "#/components/schemas/oauth.core.Models.AccountInfoViewModel": {
+        "additionalProperties": false,
+        "properties": {
+          "accountNumber": {
+            "nullable": true,
+            "type": "string"
+          },
+          "login": {
+            "format": "int64",
+            "nullable": true,
+            "type": "integer"
+          },
+          "markers": {
+            "items": {
+              "$ref": "#/components/schemas/oauth.core.Models.MarkerModel"
+            },
+            "nullable": true,
+            "type": "array"
+          },
+          "name": {
+            "nullable": true,
+            "type": "string"
+          },
+          "platformType": {
+            "nullable": true,
+            "type": "string"
+          },
+          "productCode": {
+            "nullable": true,
+            "type": "string"
+          },
+          "registrationDate": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "serverName": {
+            "nullable": true,
+            "type": "string"
+          },
+          "tradingAccountKey": {
+            "format": "int64",
+            "nullable": true,
+            "type": "integer"
+          },
+          "type": {
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "#/components/schemas/oauth.core.Models.MarkerModel": {
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "nullable": true,
+            "type": "string"
+          },
+          "type": {
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "#/components/schemas/oauth.core.Models.UserInfo.AddressInfoViewModel": {
+        "additionalProperties": false,
+        "properties": {
+          "addressTypeName": {
+            "nullable": true,
+            "type": "string"
+          },
+          "addressValue": {
+            "nullable": true,
+            "type": "string"
+          },
+          "addressValueOriginal": {
+            "nullable": true,
+            "type": "string"
+          },
+          "cityName": {
+            "nullable": true,
+            "type": "string"
+          },
+          "cityNameOriginal": {
+            "nullable": true,
+            "type": "string"
+          },
+          "zipCode": {
+            "nullable": true,
+            "type": "string"
+          },
+          "zipCodeSuffix": {
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "#/components/schemas/oauth.core.Models.UserInfo.ContactInfoViewModel": {
+        "additionalProperties": false,
+        "properties": {
+          "contactMethodName": {
+            "nullable": true,
+            "type": "string"
+          },
+          "isAchieved": {
+            "type": "boolean"
+          },
+          "isAllowed": {
+            "type": "boolean"
+          },
+          "isPrimary": {
+            "type": "boolean"
+          },
+          "isValid": {
+            "type": "boolean"
+          },
+          "isVerified": {
+            "type": "boolean"
+          },
+          "value": {
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "#/components/schemas/oauth.core.Models.UserInfo.ProfileInfoViewModel": {
+        "additionalProperties": false,
+        "properties": {
+          "address": {
+            "$ref": "#/components/schemas/oauth.core.Models.UserInfo.AddressInfoViewModel"
+          },
+          "amlInfo": {
+            "nullable": true,
+            "type": "string"
+          },
+          "amlStatus": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "comment": {
+            "nullable": true,
+            "type": "string"
+          },
+          "contacts": {
+            "items": {
+              "$ref": "#/components/schemas/oauth.core.Models.UserInfo.ContactInfoViewModel"
+            },
+            "nullable": true,
+            "type": "array"
+          },
+          "country": {
+            "nullable": true,
+            "type": "string"
+          },
+          "dateOfBirth": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "documentSetTypeName": {
+            "nullable": true,
+            "type": "string"
+          },
+          "employeeName": {
+            "nullable": true,
+            "type": "string"
+          },
+          "employmentStatusCode": {
+            "nullable": true,
+            "type": "string"
+          },
+          "firstName": {
+            "nullable": true,
+            "type": "string"
+          },
+          "firstNameOriginal": {
+            "nullable": true,
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "isDirector": {
+            "type": "boolean"
+          },
+          "lastName": {
+            "nullable": true,
+            "type": "string"
+          },
+          "lastNameOriginal": {
+            "nullable": true,
+            "type": "string"
+          },
+          "name": {
+            "nullable": true,
+            "type": "string"
+          },
+          "nameOriginal": {
+            "nullable": true,
+            "type": "string"
+          },
+          "nationalityCode": {
+            "nullable": true,
+            "type": "string"
+          },
+          "nickname": {
+            "nullable": true,
+            "type": "string"
+          },
+          "occupation": {
+            "nullable": true,
+            "type": "string"
+          },
+          "passportIdNumber": {
+            "nullable": true,
+            "type": "string"
+          },
+          "position": {
+            "nullable": true,
+            "type": "string"
+          },
+          "preferredLanguageCode": {
+            "deprecated": true,
+            "nullable": true,
+            "type": "string"
+          },
+          "profileType": {
+            "nullable": true,
+            "type": "string"
+          },
+          "referenceType": {
+            "nullable": true,
+            "type": "string"
+          },
+          "ssn": {
+            "nullable": true,
+            "type": "string"
+          },
+          "title": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "translationStatusName": {
+            "nullable": true,
+            "type": "string"
+          },
+          "webSiteUrl": {
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "#/components/schemas/oauth.core.Models.UserInfo.UserInfoViewModel": {
+        "additionalProperties": false,
+        "properties": {
+          "accounts": {
+            "items": {
+              "$ref": "#/components/schemas/oauth.core.Models.AccountInfoViewModel"
+            },
+            "nullable": true,
+            "type": "array"
+          },
+          "country": {
+            "nullable": true,
+            "type": "string"
+          },
+          "domain": {
+            "nullable": true,
+            "type": "string"
+          },
+          "email": {
+            "nullable": true,
+            "type": "string"
+          },
+          "firstName": {
+            "nullable": true,
+            "type": "string"
+          },
+          "id": {
+            "nullable": true,
+            "type": "string"
+          },
+          "language": {
+            "nullable": true,
+            "type": "string"
+          },
+          "lastName": {
+            "nullable": true,
+            "type": "string"
+          },
+          "mainAccountNumber": {
+            "nullable": true,
+            "type": "string"
+          },
+          "markers": {
+            "items": {
+              "$ref": "#/components/schemas/oauth.core.Models.MarkerModel"
+            },
+            "nullable": true,
+            "type": "array"
+          },
+          "nickname": {
+            "nullable": true,
+            "type": "string"
+          },
+          "phone": {
+            "nullable": true,
+            "type": "string"
+          },
+          "profiles": {
+            "items": {
+              "$ref": "#/components/schemas/oauth.core.Models.UserInfo.ProfileInfoViewModel"
+            },
+            "nullable": true,
+            "type": "array"
+          },
+          "userName": {
+            "nullable": true,
+            "type": "string"
+          },
+          "userTypeName": {
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "#/components/schemas/portal.core.Models.Domain": {
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "#/components/schemas/portal.module.auth.Models.MultiFactorModel": {
+        "additionalProperties": false,
+        "properties": {
+          "identityTypes": {
+            "items": {
+              "type": "string"
+            },
+            "nullable": true,
+            "type": "array"
+          },
+          "state": {
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "#/components/schemas/portal.module.auth.Models.v3.TicketModel": {
+        "additionalProperties": false,
+        "properties": {
+          "authorized_at": {
+            "format": "date-time",
+            "nullable": true,
+            "type": "string"
+          },
+          "tokens": {
+            "items": {
+              "$ref": "#/components/schemas/portal.module.auth.Models.v3.TokenModelV3"
+            },
+            "nullable": true,
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "#/components/schemas/portal.module.auth.Models.v3.TokenModelV3": {
+        "additionalProperties": false,
+        "properties": {
+          "expires": {
+            "format": "date-time",
+            "nullable": true,
+            "readOnly": true,
+            "type": "string"
+          },
+          "expires_in": {
+            "format": "int32",
+            "nullable": true,
+            "type": "integer"
+          },
+          "grant_type": {
+            "nullable": true,
+            "type": "string"
+          },
+          "issued": {
+            "format": "date-time",
+            "nullable": true,
+            "type": "string"
+          },
+          "token_type": {
+            "nullable": true,
+            "type": "string"
+          },
+          "value": {
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "#/components/schemas/portal.module.auth.TokenModel": {
+        "additionalProperties": false,
+        "properties": {
+          ".expires": {
+            "format": "date-time",
+            "readOnly": true,
+            "type": "string"
+          },
+          ".issued": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "access_token": {
+            "nullable": true,
+            "type": "string"
+          },
+          "authorized_at": {
+            "format": "date-time",
+            "nullable": true,
+            "type": "string"
+          },
+          "expires_in": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "refresh_token": {
+            "nullable": true,
+            "type": "string"
+          },
+          "refresh_token_expires": {
+            "format": "date-time",
+            "nullable": true,
+            "type": "string"
+          },
+          "refresh_token_expires_in": {
+            "format": "int32",
+            "nullable": true,
+            "readOnly": true,
+            "type": "integer"
+          },
+          "refresh_token_issued": {
+            "format": "date-time",
+            "nullable": true,
+            "type": "string"
+          },
+          "token_type": {
+            "nullable": true,
+            "type": "string"
+          },
+          "userName": {
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "#/components/schemas/portal.module.auth.api.Models.v2.MultiFactorConfigurationResponseModel": {
+        "additionalProperties": false,
+        "properties": {
+          "configurationGroup": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "identityFactors": {
+            "items": {
+              "$ref": "#/components/schemas/portal.module.auth.api.Models.v2.UserIdentityFactor"
+            },
+            "nullable": true,
+            "type": "array"
+          },
+          "state": {
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "#/components/schemas/portal.module.auth.api.Models.v2.UserIdentityFactor": {
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "nullable": true,
+            "type": "string"
+          },
+          "identityTypes": {
+            "description": "Identity types the user can choose from to complete the factor",
+            "items": {
+              "$ref": "#/components/schemas/portal.module.auth.api.Models.v2.UserIdentityType"
+            },
+            "nullable": true,
+            "type": "array"
+          },
+          "value": {
+            "format": "int32",
+            "type": "integer"
+          }
+        },
+        "type": "object"
+      },
+      "#/components/schemas/portal.module.auth.api.Models.v2.UserIdentityType": {
+        "additionalProperties": false,
+        "properties": {
+          "isEnabled": {
+            "description": "Indicates whether current user enabled this identity type",
+            "nullable": true,
+            "type": "boolean"
+          },
+          "isExternal": {
+            "nullable": true,
+            "type": "boolean"
+          },
+          "name": {
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "#/components/schemas/portal.module.auth.api.Models.v2.VerifyFactorModel": {
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "description": "Verification code",
+            "nullable": true,
+            "type": "string"
+          },
+          "domainName": {
+            "description": "Client's domain name",
+            "nullable": true,
+            "type": "string"
+          },
+          "identityFactorCode": {
+            "description": "Identity factor the user is verified for",
+            "nullable": true,
+            "type": "string"
+          },
+          "identityTypeName": {
+            "description": "Identity type that the user wants to continue the authentication with",
+            "nullable": true,
+            "type": "string"
+          },
+          "key": {
+            "description": "Identity key (login, device ID, phone number, etc.) is required if user has more than one identity of the specified type",
+            "nullable": true,
+            "type": "string"
+          },
+          "state": {
+            "description": "Current MFA state",
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "#/components/schemas/portal.module.leverage.Leverage": {
+        "additionalProperties": false,
+        "properties": {
+          "frozenLeverage": {
+            "format": "int32",
+            "nullable": true,
+            "type": "integer"
+          },
+          "initialValue": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "isLocked": {
+            "nullable": true,
+            "type": "boolean"
+          },
+          "name": {
+            "nullable": true,
+            "type": "string"
+          },
+          "value": {
+            "format": "int32",
+            "type": "integer"
+          }
+        },
+        "type": "object"
+      },
+      "#/components/schemas/portal.module.notifications.Models.SendCodeModel": {
+        "additionalProperties": false,
+        "properties": {
+          "contactValue": {
+            "description": "Email or phone (required for identity activation)",
+            "nullable": true,
+            "type": "string"
+          },
+          "domainName": {
+            "description": "Client's domain name",
+            "nullable": true,
+            "type": "string"
+          },
+          "identityTypeName": {
+            "description": "Identity type that user wants to authenticate with",
+            "nullable": true,
+            "type": "string"
+          },
+          "state": {
+            "description": "MFA state (required for login operation)",
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "#/components/schemas/portal.module.registration.user.api.v2.IdentityRegistrationResponseModel": {
+        "additionalProperties": false,
+        "properties": {
+          "token": {
+            "$ref": "#/components/schemas/portal.module.auth.TokenModel"
+          }
+        },
+        "type": "object"
+      },
+      "#/components/schemas/portal.module.registration.user.api.v2.StartRegistrationRequestModel": {
+        "additionalProperties": false,
+        "properties": {
+          "domainName": {
+            "description": "Client's domain name",
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "#/components/schemas/portal.ps.crypto.api.model.CryptoAddressCreate": {
+        "additionalProperties": false,
+        "properties": {
+          "accountNumber": {
+            "description": "Number of the ewallet where the money will be deposited to",
+            "nullable": true,
+            "type": "string"
+          },
+          "cryptoTokenStandardCode": {
+            "description": "Crypto token standard code, for example, BEP20/ERC20/SPL/TRC20/etc., required for tokens",
+            "nullable": true,
+            "type": "string"
+          },
+          "currencyCode": {
+            "description": "Payment currency code (ISO 4217)",
+            "nullable": true,
+            "type": "string"
+          },
+          "domainName": {
+            "description": "Client's domain name",
+            "nullable": true,
+            "type": "string"
+          },
+          "paymentOptionCode": {
+            "nullable": true,
+            "type": "string"
+          },
+          "paymentRouteCode": {
+            "nullable": true,
+            "type": "string"
+          },
+          "paymentTypeCode": {
+            "nullable": true,
+            "type": "string"
+          },
+          "reuse": {
+            "description": "True (by default) - allows to reuse the crypto addresses which were previously used for this type of payments;\nFalse - enforces the creation of a new crypto address",
+            "type": "boolean"
+          }
+        },
+        "type": "object"
+      },
+      "#/components/schemas/portal.ps.crypto.configuration.api.v2.CryptoToken": {
+        "additionalProperties": false,
+        "properties": {
+          "cryptoTokenStandardCode": {
+            "nullable": true,
+            "type": "string"
+          },
+          "currency": {
+            "$ref": "#/components/schemas/at.core.Models.CurrencyModel"
+          },
+          "hash": {
+            "nullable": true,
+            "type": "string"
+          },
+          "precision": {
+            "format": "int32",
+            "type": "integer"
+          }
+        },
+        "type": "object"
+      },
+      "#/components/schemas/portal.ps.wire.api.model.BanksResponseModel": {
+        "additionalProperties": false,
+        "properties": {
+          "banks": {
+            "items": {
+              "$ref": "#/components/schemas/System.Collections.Generic.KeyValuePair`2[System.Guid,System.String]"
+            },
+            "nullable": true,
+            "type": "array"
+          },
+          "russianTransferFields": {
+            "items": {
+              "type": "string"
+            },
+            "nullable": true,
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "#/components/schemas/portal.ps.wire.api.v3.AddModel": {
+        "additionalProperties": false,
+        "properties": {
+          "accountCurrencyCode": {
+            "nullable": true,
+            "type": "string"
+          },
+          "accountNumber": {
+            "nullable": true,
+            "type": "string"
+          },
+          "amount": {
+            "format": "double",
+            "type": "number"
+          },
+          "comment": {
+            "description": "Payment description",
+            "nullable": true,
+            "type": "string"
+          },
+          "currencyCode": {
+            "nullable": true,
+            "type": "string"
+          },
+          "domainName": {
+            "nullable": true,
+            "type": "string"
+          },
+          "paymentDetails": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "nullable": true,
+            "type": "object"
+          },
+          "paymentOptionCode": {
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "#/components/schemas/portal.ps.wire.api.v3.AddResult": {
+        "additionalProperties": false,
+        "properties": {
+          "chainId": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "invoice": {
+            "nullable": true
+          },
+          "wireId": {
+            "format": "uuid",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "#/components/schemas/portal.user.User": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "type": {
+            "$ref": "#/components/schemas/portal.user.UserType"
+          }
+        },
+        "type": "object"
+      },
+      "#/components/schemas/portal.user.UserType": {
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "#/components/schemas/portal.user.identity.configuration.Enums.MultiFactorParameter": {
+        "enum": [
+          "NONE",
+          "API",
+          "BACKUPCODE_ACTIVATION",
+          "BACKUPCODE_CHANGE",
+          "BACKUPCODE_DEACTIVATION",
+          "BACKUPCODE_VIEW",
+          "CARD_FULL_DETAILS",
+          "CLIENT_FACTOR_MANAGEMENT",
+          "CONTACT_CREATE",
+          "CONTACT_DELETE",
+          "EMAIL_ACTIVATION",
+          "EMAIL_ADDRESS_CHANGE",
+          "EMAIL_DEACTIVATION",
+          "EXTERNALDEVICE_ACTIVATION",
+          "EXTERNALDEVICE_BINDING",
+          "EXTERNALDEVICE_DEACTIVATION",
+          "PUSH_ACTIVATION",
+          "PUSH_DEACTIVATION",
+          "FIDO2_ACTIVATION",
+          "FIDO2_DEACTIVATION",
+          "FINANCE_OPERATION_CANCEL",
+          "FREE_FORM_ORDER",
+          "GENERIC_ACTIVATION",
+          "GENERIC_DEACTIVATION",
+          "GOOGLEAUTHENTICATOR_ACTIVATION",
+          "GOOGLEAUTHENTICATOR_DEACTIVATION",
+          "INVESTOR_PASSWORD_RECOVERY",
+          "IP_ADDRESS_LIST_CHANGE",
+          "LOGIN",
+          "LOGIN_QRCODE",
+          "NOTIFICATION",
+          "PASSWORD_CHANGE",
+          "PASSWORD_CREATE",
+          "PASSWORD_DEACTIVATION",
+          "PASSWORD_RECOVERY",
+          "PASSWORD_RESET",
+          "PHONE_NUMBER_CHANGE",
+          "PINCODE_CHANGE",
+          "PINCODE_RECOVERY",
+          "PROFILE_SETTING_CHANGE",
+          "PUSH_NOTIFICATION",
+          "REGISTRATION",
+          "RESEND_PUSH",
+          "SECURITY",
+          "SHARING",
+          "SMS_ACTIVATION",
+          "SMS_DEACTIVATION",
+          "SOCIAL_NETWORK",
+          "SUMSUB_ACTIVATION",
+          "SUMSUB_DEACTIVATION",
+          "THREEDSECUREPASS_CHANGE",
+          "THREEDSECUREPASS_RECOVERY",
+          "TPM_CREATE",
+          "TPM_DEACTIVATION",
+          "TRADER_PASSWORD_RECOVERY",
+          "TRADER_PASSWORD_RESET",
+          "TRADING_ACCOUNT_ARCHIVE",
+          "TRADING_ACCOUNT_LEVERAGE_CHANGE",
+          "TRADING_ACCOUNT_STATUS_CHANGE",
+          "TRADING_AUTH_TOKEN",
+          "USER_SETTING_CHANGE",
+          "WEBAPI_TOKEN",
+          "WEBHOOK_ADDING",
+          "WEBHOOK_DELETING",
+          "WITHDRAW"
+        ],
+        "type": "string"
+      },
+      "#/components/schemas/portal.user.identity.configuration.api.v2.ClientFactorConfigurationModel": {
+        "additionalProperties": false,
+        "properties": {
+          "isEnabled": {
+            "type": "boolean"
+          },
+          "operationCode": {
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "#/components/schemas/portal.user.identity.configuration.api.v2.IdentityKeyConfigurationModel": {
+        "additionalProperties": false,
+        "properties": {
+          "identityKeyName": {
+            "nullable": true,
+            "type": "string"
+          },
+          "isEnabled": {
+            "type": "boolean"
+          }
+        },
+        "type": "object"
+      },
+      "#/components/schemas/portal.user.identity.configuration.api.v2.IdentityTypeConfigurationModel": {
+        "additionalProperties": false,
+        "properties": {
+          "clientFactors": {
+            "items": {
+              "$ref": "#/components/schemas/portal.user.identity.configuration.api.v2.ClientFactorConfigurationModel"
+            },
+            "nullable": true,
+            "type": "array"
+          },
+          "date": {
+            "description": "Identity Verification Date",
+            "format": "date-time",
+            "nullable": true,
+            "type": "string"
+          },
+          "identityKeys": {
+            "items": {
+              "$ref": "#/components/schemas/portal.user.identity.configuration.api.v2.IdentityKeyConfigurationModel"
+            },
+            "nullable": true,
+            "type": "array"
+          },
+          "identityTypeName": {
+            "nullable": true,
+            "type": "string"
+          },
+          "isEnabled": {
+            "type": "boolean"
+          },
+          "isExternal": {
+            "type": "boolean"
+          },
+          "value": {
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "#/components/schemas/portal.user.login.api.model.AuthorizeModel": {
+        "additionalProperties": false,
+        "properties": {
+          "domainName": {
+            "description": "Client's domain name",
+            "nullable": true,
+            "type": "string"
+          },
+          "identifier": {
+            "description": "Email, mobile phone number, device ID, etc.",
+            "nullable": true,
+            "type": "string"
+          },
+          "state": {
+            "description": "MFA state",
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "#/components/schemas/portal.user.login.api.model.LoginConfigurationModel": {
+        "additionalProperties": false,
+        "properties": {
+          "identityTypeName": {
+            "nullable": true,
+            "type": "string"
+          },
+          "isExternal": {
+            "type": "boolean"
+          },
+          "isOAuth": {
+            "type": "boolean"
+          },
+          "order": {
+            "format": "int32",
+            "type": "integer"
+          }
+        },
+        "type": "object"
+      },
+      "#/components/schemas/portal.user.settings.api.v1.AccountSecuritySettingsModel": {
+        "additionalProperties": false,
+        "properties": {
+          "multiFactorVerification": {
+            "description": "A list of enabled Identity factors",
+            "items": {
+              "$ref": "#/components/schemas/portal.user.identity.configuration.api.v2.IdentityTypeConfigurationModel"
+            },
+            "nullable": true,
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "#/components/schemas/portal.user.settings.api.v1.AddressModel": {
+        "additionalProperties": false,
+        "properties": {
+          "cityName": {
+            "description": "City name",
+            "nullable": true,
+            "type": "string"
+          },
+          "cityNameOriginal": {
+            "description": "City name in original",
+            "nullable": true,
+            "type": "string"
+          },
+          "country": {
+            "description": "Country name",
+            "nullable": true,
+            "type": "string"
+          },
+          "countryCode": {
+            "description": "Country code",
+            "nullable": true,
+            "type": "string"
+          },
+          "district": {
+            "description": "District name",
+            "nullable": true,
+            "type": "string"
+          },
+          "state": {
+            "description": "State name",
+            "nullable": true,
+            "type": "string"
+          },
+          "stateOriginal": {
+            "description": "State name in original",
+            "nullable": true,
+            "type": "string"
+          },
+          "value": {
+            "description": "Address value",
+            "nullable": true,
+            "type": "string"
+          },
+          "valueOriginal": {
+            "description": "Address value in original",
+            "nullable": true,
+            "type": "string"
+          },
+          "zipCode": {
+            "description": "Zip code number",
+            "nullable": true,
+            "type": "string"
+          },
+          "zipCodeSuffix": {
+            "description": "Last 4 digits of a zip code that represent a specific delivery route within that overall delivery area",
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "#/components/schemas/portal.user.settings.api.v1.ContactModel": {
+        "additionalProperties": false,
+        "properties": {
+          "achieved": {
+            "description": "User was contacted",
+            "type": "boolean"
+          },
+          "allowed": {
+            "description": "The user doesn't mind that this contact is used for communication with him",
+            "type": "boolean"
+          },
+          "contactMethod": {
+            "description": "Contact method name",
+            "nullable": true,
+            "type": "string"
+          },
+          "identityTypes": {
+            "description": "Contact identity types",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true,
+            "type": "array"
+          },
+          "primary": {
+            "description": "Prefferable contact for communication",
+            "type": "boolean"
+          },
+          "sendNotifications": {
+            "description": "Contact is used for sending  notification messages",
+            "type": "boolean"
+          },
+          "value": {
+            "description": "Contact value",
+            "nullable": true,
+            "type": "string"
+          },
+          "verified": {
+            "description": "The contact is verified by user",
+            "type": "boolean"
+          }
+        },
+        "type": "object"
+      },
+      "#/components/schemas/portal.user.settings.api.v1.DocumentModel": {
+        "additionalProperties": false,
+        "properties": {
+          "comment": {
+            "description": "Comment left by user who verified client document",
+            "nullable": true,
+            "type": "string"
+          },
+          "status": {
+            "description": "Current status of the document",
+            "nullable": true,
+            "type": "string"
+          },
+          "type": {
+            "description": "A type of the document",
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "#/components/schemas/portal.user.settings.api.v1.DocumentSetModel": {
+        "additionalProperties": false,
+        "properties": {
+          "comment": {
+            "description": "Comment left by user who verified provided documents",
+            "nullable": true,
+            "type": "string"
+          },
+          "documents": {
+            "description": "Uploaded documents",
+            "items": {
+              "$ref": "#/components/schemas/portal.user.settings.api.v1.DocumentModel"
+            },
+            "nullable": true,
+            "type": "array"
+          },
+          "type": {
+            "description": "Name of the system to which a profile information belongs",
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "#/components/schemas/portal.user.settings.api.v1.MarkerModel": {
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "description": "Marker name the user is marked with",
+            "nullable": true,
+            "type": "string"
+          },
+          "type": {
+            "description": "Marker type the user is marked with",
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "#/components/schemas/portal.user.settings.api.v1.ProfileModel": {
+        "additionalProperties": false,
+        "properties": {
+          "active": {
+            "description": "Current profile",
+            "type": "boolean"
+          },
+          "address": {
+            "$ref": "#/components/schemas/portal.user.settings.api.v1.AddressModel"
+          },
+          "companyName": {
+            "description": "Company name",
+            "nullable": true,
+            "type": "string"
+          },
+          "companyNameOriginal": {
+            "description": "Company name in original",
+            "nullable": true,
+            "type": "string"
+          },
+          "contacts": {
+            "description": "List of user contacts",
+            "items": {
+              "$ref": "#/components/schemas/portal.user.settings.api.v1.ContactModel"
+            },
+            "nullable": true,
+            "type": "array"
+          },
+          "dateOfBirth": {
+            "description": "Date of birth",
+            "nullable": true,
+            "type": "string"
+          },
+          "director": {
+            "description": "The user holds a position of director in the company",
+            "nullable": true,
+            "type": "boolean"
+          },
+          "employeeName": {
+            "description": "The name of the employer company",
+            "nullable": true,
+            "type": "string"
+          },
+          "employmentStatus": {
+            "description": "Current employment state",
+            "nullable": true,
+            "type": "string"
+          },
+          "firstName": {
+            "description": "User first name",
+            "nullable": true,
+            "type": "string"
+          },
+          "firstNameOriginal": {
+            "description": "User first name in original",
+            "nullable": true,
+            "type": "string"
+          },
+          "id": {
+            "description": "Profile ID",
+            "format": "uuid",
+            "type": "string"
+          },
+          "lastName": {
+            "description": "User last name",
+            "nullable": true,
+            "type": "string"
+          },
+          "lastNameOriginal": {
+            "description": "User last name in original",
+            "nullable": true,
+            "type": "string"
+          },
+          "legalEntityIdentifier": {
+            "description": "A unique code(identifier) ​​assigned to legal entities in accordance with the RSM ISO 17442 standard and used in conducting transactions and reporting in financial markets",
+            "nullable": true,
+            "type": "string"
+          },
+          "nationality": {
+            "description": "Nationality",
+            "nullable": true,
+            "type": "string"
+          },
+          "natureOfBusiness": {
+            "description": "Company activity type",
+            "nullable": true,
+            "type": "string"
+          },
+          "nickname": {
+            "description": "User nickname in the system",
+            "nullable": true,
+            "type": "string"
+          },
+          "passportIdNumber": {
+            "description": "Passport Id number",
+            "nullable": true,
+            "type": "string"
+          },
+          "position": {
+            "description": "Appointment in the company",
+            "nullable": true,
+            "type": "string"
+          },
+          "referenceType": {
+            "description": "Name of the system to which a profile information belongs",
+            "nullable": true,
+            "type": "string"
+          },
+          "title": {
+            "description": "User title",
+            "nullable": true,
+            "type": "string"
+          },
+          "type": {
+            "description": "Account type name",
+            "nullable": true,
+            "type": "string"
+          },
+          "webSiteUrl": {
+            "description": "Company web site URL",
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "#/components/schemas/portal.user.settings.api.v1.UserSummaryResponseModel": {
+        "additionalProperties": false,
+        "properties": {
+          "accountSecuritySettings": {
+            "$ref": "#/components/schemas/portal.user.settings.api.v1.AccountSecuritySettingsModel"
+          },
+          "eWallet": {
+            "description": "eWallet number",
+            "nullable": true,
+            "type": "string"
+          },
+          "ibanBic": {
+            "description": "eWallet Iban BIC number",
+            "nullable": true,
+            "type": "string"
+          },
+          "id": {
+            "description": "User Id",
+            "format": "uuid",
+            "type": "string"
+          },
+          "lastLoginDate": {
+            "description": "Last successful user login date",
+            "format": "date-time",
+            "nullable": true,
+            "type": "string"
+          },
+          "lastLoginDomain": {
+            "description": "Domain where user was successfully authorized last time",
+            "nullable": true,
+            "type": "string"
+          },
+          "markers": {
+            "description": "List of the user markers",
+            "items": {
+              "$ref": "#/components/schemas/portal.user.settings.api.v1.MarkerModel"
+            },
+            "nullable": true,
+            "type": "array"
+          },
+          "preferredLanguage": {
+            "description": "Primary language",
+            "nullable": true,
+            "type": "string"
+          },
+          "profiles": {
+            "description": "List of user profiles",
+            "items": {
+              "$ref": "#/components/schemas/portal.user.settings.api.v1.ProfileModel"
+            },
+            "nullable": true,
+            "type": "array"
+          },
+          "registrationDate": {
+            "description": "eWallet registration date",
+            "format": "date-time",
+            "type": "string"
+          },
+          "userType": {
+            "description": "User account type",
+            "nullable": true,
+            "type": "string"
+          },
+          "verification": {
+            "$ref": "#/components/schemas/portal.user.settings.api.v1.VerificationModel"
+          }
+        },
+        "type": "object"
+      },
+      "#/components/schemas/portal.user.settings.api.v1.VerificationModel": {
+        "additionalProperties": false,
+        "properties": {
+          "documentSets": {
+            "description": "A list of uploaded documents",
+            "items": {
+              "$ref": "#/components/schemas/portal.user.settings.api.v1.DocumentSetModel"
+            },
+            "nullable": true,
+            "type": "array"
+          },
+          "grade": {
+            "description": "Current user grade",
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "#/components/schemas/tp.core.TradingPlatform": {
+        "additionalProperties": false,
+        "properties": {
+          "address": {
+            "nullable": true,
+            "type": "string"
+          },
+          "code": {
+            "nullable": true,
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "login": {
+            "nullable": true,
+            "type": "string"
+          },
+          "name": {
+            "nullable": true,
+            "type": "string"
+          },
+          "password": {
+            "nullable": true,
+            "type": "string"
+          },
+          "serviceAddress": {
+            "nullable": true,
+            "type": "string"
+          },
+          "serviceLogin": {
+            "nullable": true,
+            "type": "string"
+          },
+          "servicePassword": {
+            "nullable": true,
+            "type": "string"
+          },
+          "tradingPlatformType": {
+            "$ref": "#/components/schemas/tp.core.TradingPlatformType"
+          },
+          "type": {
+            "$ref": "#/components/schemas/tp.core.TradingPlatformType"
+          }
+        },
+        "type": "object"
+      },
+      "#/components/schemas/tp.core.TradingPlatformType": {
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "#/components/schemas/tp.core.TradingProduct": {
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "nullable": true,
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "nullable": true,
+            "type": "string"
+          },
+          "isAllowPromotion": {
+            "nullable": true,
+            "type": "boolean"
+          },
+          "isDemo": {
+            "nullable": true,
+            "type": "boolean"
+          },
+          "isExternallyControlled": {
+            "nullable": true,
+            "type": "boolean"
+          },
+          "multiplier": {
+            "format": "double",
+            "nullable": true,
+            "type": "number"
+          },
+          "name": {
+            "nullable": true,
+            "type": "string"
+          },
+          "type": {
+            "$ref": "#/components/schemas/tp.core.TradingProductType"
+          },
+          "value": {
+            "format": "int32",
+            "nullable": true,
+            "type": "integer"
+          }
+        },
+        "type": "object"
+      },
+      "#/components/schemas/tp.core.TradingProductType": {
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "nullable": true,
+            "type": "string"
+          },
+          "value": {
+            "format": "int32",
+            "type": "integer"
+          }
+        },
+        "type": "object"
+      }
+    },
+    "security": [],
+    "securitySchemes": {
+      "Bearer": {
+        "bearerFormat": "jwt",
+        "description": "Please enter a valid token",
+        "scheme": "Bearer",
+        "type": "http"
+      }
+    }
+  }
+}

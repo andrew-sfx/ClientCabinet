@@ -1,0 +1,19 @@
+# Local dependencies and build output
+node_modules/
+dist/
+coverage/
+playwright-report/
+test-results/
+
+# Credentials, local settings and private runtime evidence
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+.local/
+.claude/settings.local.json
+.claude/worktrees/
+.codex/worktrees/
+CLAUDE.local.md
+*.log

@@ -1,0 +1,292 @@
+.deposit-page {
+  min-height: 100svh;
+  padding: 8px 24px 64px;
+  background:
+    radial-gradient(
+      ellipse 36% 60% at 0 0,
+      color-mix(in srgb, var(--glow) 40%, transparent),
+      transparent 72%
+    ),
+    var(--bg);
+  font-size: 14px;
+  line-height: 20px;
+}
+.deposit-column {
+  max-width: 628px;
+  margin: 0 auto;
+}
+.deposit-back {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  margin-left: -12px;
+  border-radius: 50%;
+  color: var(--ink);
+  text-decoration: none;
+}
+.deposit-back:hover {
+  background: var(--icon-hover);
+}
+.deposit-back svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.deposit-back:focus-visible,
+.deposit-primary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+.deposit-page h1 {
+  font-size: 24px;
+  line-height: 30px;
+  margin: 2px 0 24px;
+  font-weight: 700;
+}
+.deposit-page .deposit-group {
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
+  color: var(--ink-muted);
+  margin: 0 0 4px;
+}
+.deposit-list {
+  border-radius: 12px;
+  background: var(--surface-quiet);
+}
+.deposit-method.home-soon,
+.deposit-method {
+  position: relative;
+  width: 100%;
+  min-height: 64px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-align: left;
+  padding: 12px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  transition: background var(--motion-base) var(--ease-standard);
+}
+.deposit-method:first-child {
+  border-radius: 12px 12px 0 0;
+}
+.deposit-method:last-child {
+  border-radius: 0 0 12px 12px;
+}
+.deposit-method:only-child {
+  border-radius: 12px;
+}
+.deposit-method:disabled {
+  color: var(--ink-muted);
+}
+.deposit-method:focus-visible {
+  outline-offset: -3px;
+}
+.deposit-method:not(:disabled):active {
+  background: var(--surface-field);
+}
+@media (hover: hover) {
+  .deposit-method:not(:disabled):hover {
+    background: var(--row-hover);
+  }
+}
+.deposit-icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--surface-chip);
+  font-size: 13px;
+  font-weight: 600;
+}
+.deposit-copy {
+  min-width: 0;
+  flex: 1;
+  overflow-wrap: anywhere;
+}
+.deposit-name {
+  display: block;
+  font-size: 15px;
+  line-height: 20px;
+  font-weight: 500;
+}
+.deposit-description {
+  display: block;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--ink-muted);
+}
+.deposit-state {
+  padding: 32px 24px;
+  border-radius: 12px;
+  background: var(--surface-quiet);
+  text-align: center;
+}
+.deposit-state-icon {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--surface-chip);
+  margin: auto;
+}
+.deposit-state-icon.danger {
+  color: var(--danger);
+}
+.deposit-state h2 {
+  font-size: 19px;
+  line-height: 26px;
+  margin: 16px 0 8px;
+  font-weight: 600;
+}
+.deposit-state p {
+  color: var(--ink-muted);
+  margin: 0 auto 24px;
+  max-width: 360px;
+}
+.deposit-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 999px;
+  background: var(--primary);
+  color: var(--on-primary);
+  padding: 12px 24px;
+  min-height: 44px;
+  font-weight: 500;
+  text-decoration: none;
+}
+.deposit-primary:hover {
+  background: var(--primary-hover);
+}
+.deposit-skeleton {
+  height: 64px;
+  padding: 12px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.deposit-bone {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  background: var(--surface-chip);
+  border-radius: 6px;
+}
+.deposit-bone:after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--row-hover),
+    transparent
+  );
+  animation: deposit-shine var(--motion-shimmer) linear infinite;
+}
+.deposit-bone.circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+}
+.deposit-bones {
+  flex: 1;
+}
+.deposit-bone.title {
+  width: 40%;
+  height: 16px;
+  margin-bottom: 8px;
+}
+.deposit-bone.line {
+  width: 78%;
+  height: 12px;
+}
+@keyframes deposit-shine {
+  to {
+    transform: translateX(100%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .deposit-bone:after {
+    animation: none;
+  }
+}
+@media (max-width: 600px) {
+  .deposit-page {
+    padding: 16px 16px 40px;
+    background:
+      radial-gradient(
+        ellipse 65% 35% at 0 0,
+        color-mix(in srgb, var(--glow) 22%, transparent),
+        transparent 72%
+      ),
+      var(--bg);
+  }
+  .deposit-page h1 {
+    margin: 6px 0 32px;
+  }
+  .deposit-page .deposit-group {
+    margin-bottom: 10px;
+  }
+  .deposit-list,
+  .deposit-state {
+    border-radius: 24px;
+  }
+  .deposit-method.home-soon,
+  .deposit-method {
+    padding: 16px;
+    min-height: 74px;
+  }
+  .deposit-method:first-child {
+    border-radius: 24px 24px 0 0;
+  }
+  .deposit-method:last-child {
+    border-radius: 0 0 24px 24px;
+  }
+  .deposit-method:only-child {
+    border-radius: 24px;
+  }
+  .deposit-icon {
+    width: 40px;
+    height: 40px;
+  }
+  .deposit-name {
+    font-size: 16px;
+    line-height: 22px;
+  }
+  .deposit-state {
+    padding: 28px 20px;
+  }
+  .deposit-skeleton {
+    height: 74px;
+    padding: 16px;
+  }
+  .deposit-bone.circle {
+    width: 40px;
+    height: 40px;
+  }
+}
+.deposit-icon svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}

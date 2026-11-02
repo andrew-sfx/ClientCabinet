@@ -226,7 +226,8 @@ export function formsFixture(mode = 'data') {
       state.posts++
       if (state.mode === 'post-network')
         throw new TypeError('Synthetic unavailable')
-      if (state.mode === 'post-500') status = 503
+      if (state.mode === 'post-timeout') throw new DOMException('Synthetic timeout', 'TimeoutError')
+      if (state.mode === 'post-500') status = 500
       if (state.mode === 'post-401') status = 401
       if (state.mode === 'post-400') {
         status = 400

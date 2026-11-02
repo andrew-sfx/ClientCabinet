@@ -262,47 +262,82 @@ test('wire duplicate submit is locked before bank GET; chooses first bank and pr
   )
   f.session.clear()
 })
-for (const mode of ['post-network', 'post-500', 'post-invalid', 'post-401'])
-  test(
-    'uncertain ' +
-      mode +
-      ' sends once, persists an opaque marker, rejects remount retry',
-    async () => {
-      const f = await setup('crypto', mode)
-      await assert.rejects(f.formApi.createAddress(f.selection, signal()), {
-        code: 'OPERATION_UNKNOWN',
-      })
-      assert.equal(f.state.posts, 1)
-      assert.equal(
-        await f.formApi.hasUnknown('crypto', f.selection.account.number),
-        true,
-      )
-      const remounted = new DepositFormsApi(
-        f.session,
-        f.formFetcher,
-        f.markerStorage,
-      )
-      await assert.rejects(remounted.createAddress(f.selection, signal()), {
-        code: 'OPERATION_UNKNOWN',
-      })
-      assert.equal(f.state.posts, 1)
-      assert.ok([...f.markers.keys()].every((k) => !k.includes('TEST')))
-      assert.ok([...f.markers.values()].every((v) => v === 'pending'))
-      f.session.clear()
-    },
-  )
-test('known 400 rejection allows a fresh explicit submit, never automatic retry', async () => {
-  const f = await setup('crypto', 'post-400')
-  await assert.rejects(f.formApi.createAddress(f.selection, signal()), {
-    status: 400,
+for (const mode of ['post-network', 'post-500', 'post-timeout', 'post-invalid'])
+  test('Crypto ' + mode + ' allows explicit retry without a persistent marker', async () => {
+    const f = await setup('crypto', mode)
+    await assert.rejects(f.formApi.createAddress(f.selection, signal()))
+    assert.equal(f.state.posts, 1)
+    assert.equal(f.markers.size, 0)
+    assert.equal(await f.formApi.hasUnknown('crypto', f.selection.account.number, 'USDT'), false)
+    f.state.mode = 'data'
+    const remounted = new DepositFormsApi(f.session, f.formFetcher, f.markerStorage)
+    await remounted.createAddress(f.selection, signal())
+    assert.equal(f.state.posts, 2)
+    const posts = f.state.calls.filter(c => c.method === 'POST')
+    assert.deepEqual(posts[0].body, posts[1].body)
+    f.session.clear()
   })
-  assert.equal(f.state.posts, 1)
+
+test('Crypto ignores legacy markers and another currency works after a failed request', async () => {
+  const f = await setup('crypto', 'post-500')
+  const legacy = JSON.stringify(['https://api3.soft-fx.com', 'client.soft-fx.com', f.selection.account.number, 'crypto'])
+  const hash = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(legacy))
+  const key = 'clientcabinet.deposit.pending.' + Buffer.from(hash).toString('hex')
+  f.markers.set(key, 'pending')
+  await assert.rejects(f.formApi.createAddress(f.selection, signal()), { status: 500 })
+  f.state.mode = 'data'
+  const network = f.data.networks.find(n => n.currency.code === 'BTC')
+  await f.formApi.createAddress({ ...f.selection, network, config: network.config, currency: network.currency }, signal())
+  assert.equal(f.state.posts, 2)
+  assert.equal(f.markers.size, 1)
+  assert.equal(f.markers.get(key), 'pending')
+  f.session.clear()
+})
+
+for (const mode of ['post-network', 'post-500', 'post-timeout', 'post-invalid', 'post-401'])
+  test('wire ' + mode + ' keeps a dated marker and prevents immediate retry', async () => {
+    const f = await setup('wire', mode)
+    await assert.rejects(f.formApi.createInvoice(f.selection, 1000, f.data.country, signal()), { code: 'OPERATION_UNKNOWN' })
+    assert.equal(f.state.posts, 1)
+    assert.equal(await f.formApi.hasUnknown('wire', f.selection.account.number, 'USD'), true)
+    const remounted = new DepositFormsApi(f.session, f.formFetcher, f.markerStorage)
+    await assert.rejects(remounted.createInvoice(f.selection, 1000, f.data.country, signal()), { code: 'OPERATION_UNKNOWN' })
+    assert.equal(f.state.posts, 1)
+    assert.ok([...f.markers.values()].every(v => Number(v) > 0))
+    f.session.clear()
+  })
+
+test('wire marker is isolated by currency and expires at exactly 15 minutes', async (t) => {
+  const f = await setup('wire', 'post-500')
+  t.mock.timers.enable({ apis: ['Date'], now: Date.now() })
+  await assert.rejects(f.formApi.createInvoice(f.selection, 1000, f.data.country, signal()), { code: 'OPERATION_UNKNOWN' })
+  assert.equal(await f.formApi.hasUnknown('wire', f.selection.account.number, 'EUR'), false)
+  assert.equal(await f.formApi.hasUnknown('wire', 'ANOTHER-TEST-ACCOUNT', 'USD'), false)
+  t.mock.timers.tick(15 * 60 * 1000 - 1)
+  assert.equal(await f.formApi.hasUnknown('wire', f.selection.account.number, 'USD'), true)
+  t.mock.timers.tick(1)
+  assert.equal(await f.formApi.hasUnknown('wire', f.selection.account.number, 'USD'), false)
   assert.equal(f.markers.size, 0)
   f.state.mode = 'data'
-  await f.formApi.createAddress(f.selection, signal())
+  await f.formApi.createInvoice(f.selection, 1000, f.data.country, signal())
   assert.equal(f.state.posts, 2)
   f.session.clear()
 })
+
+for (const kind of ['crypto', 'wire'])
+  test(kind + ' known 400 rejection clears marker and allows explicit retry', async () => {
+    const f = await setup(kind, 'post-400')
+    const send = () => kind === 'crypto'
+      ? f.formApi.createAddress(f.selection, signal())
+      : f.formApi.createInvoice(f.selection, 1000, f.data.country, signal())
+    await assert.rejects(send(), { status: 400 })
+    assert.equal(f.state.posts, 1)
+    assert.equal(f.markers.size, 0)
+    f.state.mode = 'data'
+    await send()
+    assert.equal(f.state.posts, 2)
+    f.session.clear()
+  })
 for (const mode of ['no-country', 'no-banks'])
   test(mode + ' blocks before any creating request', async () => {
     const f = await setup('wire', mode)
@@ -408,4 +443,13 @@ test('network labels preserve token codes and fee descriptions retain minimum co
     { number: 'TEST', wallet: true, currency: usd },
   )
   assert.equal(feeValue(1000, terms.fee), 2)
+})
+
+test('Crypto unauthorized result leaves no marker and preserves session expiry', async () => {
+  const f = await setup('crypto', 'post-401')
+  await assert.rejects(f.formApi.createAddress(f.selection, signal()))
+  assert.equal(f.state.posts, 1)
+  assert.equal(f.markers.size, 0)
+  assert.equal(f.session.hasSession, false)
+  f.session.clear()
 })

@@ -7,6 +7,7 @@ const keys = sessionKeys(authConfig)
 export const SESSION_KEY = keys.key
 export const SESSION_EPOCH_KEY = keys.epoch
 export const SESSION_LOCK = keys.lock
+export const SESSION_REVOKE_FAILED_KEY = `${keys.lock}.revoke-failed`
 type StoragePort = Pick<Storage, 'getItem' | 'setItem' | 'removeItem'>
 export type Exclusive = <T>(operation: () => Promise<T>) => Promise<T>
 
@@ -26,7 +27,6 @@ export class Session {
   private refreshRevision = -1
   private checking?: Promise<boolean>
   private checkRevision = -1
-  private lateRevokeFailed = false
   private accountSummary?: AccountSummary
   constructor(api: CabinetApi, storage: StoragePort, now: () => number = Date.now, exclusive: Exclusive = operation => operation(), stateExclusive: Exclusive = operation => operation()) {
     this.api = api; this.storage = storage; this.now = now; this.exclusive = exclusive; this.stateExclusive = stateExclusive
@@ -153,12 +153,19 @@ export class Session {
       // A different tab may already have rotated the token while this one waited.
       if (tokens.access !== requestedAccess) return
       if (failedAccess ? tokens.access !== failedAccess : tokens.expiresAt - this.now() > 60000) return
+      // Arm cleanup before issuing a token: a failed flag write cannot hide a late revoke.
+      try { this.storage.setItem(SESSION_REVOKE_FAILED_KEY, this.epoch) }
+      catch { throw new AuthError('STORAGE_UNAVAILABLE') }
       const next = await this.api.refresh(tokens.refresh)
       try { await this.stateExclusive(async () => this.save(next, revision)) }
       catch (error) {
-        try { await this.api.revoke(next.access) } catch { this.lateRevokeFailed = true }
+        try {
+          await this.api.revoke(next.access)
+          this.storage.removeItem(SESSION_REVOKE_FAILED_KEY)
+        } catch { /* Leave the shared marker until logout consumes it. */ }
         throw error
       }
+      try { this.storage.removeItem(SESSION_REVOKE_FAILED_KEY) } catch { /* Logout reports uncertain cleanup. */ }
     }).catch(async error => {
       this.sync()
       if (revision === this.revision && error instanceof AuthError && [400, 401, 403].includes(error.status)) {
@@ -219,14 +226,23 @@ export class Session {
     this.sync()
     let previous: Tokens | undefined
     const pending = this.refreshing
-    this.lateRevokeFailed = false
+    let previousEpoch = this.epoch
     let cleared = true
-    try { await this.stateExclusive(async () => { this.sync(); previous = this.tokens; this.clear() }) } catch { cleared = false }
+    try { await this.stateExclusive(async () => { this.sync(); previous = this.tokens; previousEpoch = this.epoch; this.clear() }) } catch { cleared = false }
     if (pending) { try { await pending } catch { /* Invalidated by clear(). */ } }
     // The cross-tab lock waits for any other tab's in-flight refresh cleanup.
     return this.exclusive(async () => {
-      if (!previous) return cleared
-      try { await this.api.revoke(previous.access); return cleared && !this.lateRevokeFailed } catch { return false }
+      let revokeFailed: boolean
+      try {
+        const marker = this.storage.getItem(SESSION_REVOKE_FAILED_KEY)
+        // Epoch scoping keeps an old failure from affecting a later login/clear.
+        revokeFailed = marker !== null && marker === previousEpoch
+        // Check writes as well as reads; storage failure always makes logout uncertain.
+        this.storage.setItem(SESSION_REVOKE_FAILED_KEY, marker ?? '')
+        this.storage.removeItem(SESSION_REVOKE_FAILED_KEY)
+      } catch { revokeFailed = true }
+      if (!previous) return cleared && !revokeFailed
+      try { await this.api.revoke(previous.access); return cleared && !revokeFailed } catch { return false }
     }).catch(() => false)
   }
 }

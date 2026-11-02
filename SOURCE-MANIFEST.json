@@ -1,0 +1,378 @@
+[
+  {
+    "path": "src\\App.tsx",
+    "sha256": "40DC846DF7E47826D059F74E55E1CB546C9131B2E7DF2FF1003DB3B78B00E02D"
+  },
+  {
+    "path": "src\\AuthHeader.tsx",
+    "sha256": "5406132CF2ED125817C45DA216869887908D5742EC35BAAF7BE21911E918A588"
+  },
+  {
+    "path": "src\\countries.ts",
+    "sha256": "9C9D7DC7681F85DDFE1DDDE5CF214DB8F8D90F27731F855C176798F184B50B5E"
+  },
+  {
+    "path": "src\\CountryPicker.tsx",
+    "sha256": "AEA5BEA0FCC22D032877E6989D9D3CB9E5427A57C24318B65B332A2FF3235769"
+  },
+  {
+    "path": "src\\FormIcons.tsx",
+    "sha256": "59FD2ADF1C3D27AEC3A0AC3F270F8C7F8850EC261F794798EB6BC8AE85D19887"
+  },
+  {
+    "path": "src\\LoginForm.tsx",
+    "sha256": "62D158C90F2E2E6E6C364C375A7BE80ECE1A7CE23611A8E1376252B5E0ED26D3"
+  },
+  {
+    "path": "src\\main.tsx",
+    "sha256": "BE3D0B58ECB212E71C9C7AD5F8CF8FF76B789819E853B8AB3F39896180FF3A08"
+  },
+  {
+    "path": "src\\OverlayScroll.tsx",
+    "sha256": "31C57A90B0B488AAFDEB504F238B12E397C85A000ED4C0D3D8B30417EBA7551B"
+  },
+  {
+    "path": "src\\RegistrationForm.tsx",
+    "sha256": "E9636A622CE9874D27874A1FFD94619E9460023010BCC65BE27174CB0D815802"
+  },
+  {
+    "path": "src\\styles.css",
+    "sha256": "B0D4979EE4677AFEA6DCD5B1D4CFD92A38AA61FC5C576BFA3204890F013E4947"
+  },
+  {
+    "path": "src\\tokens.css",
+    "sha256": "89D5C5E41B93EF3A1131FE2589B7A549978F5DD416A9A7523B1BC35C271A2181"
+  },
+  {
+    "path": "src\\useAnimatedClose.ts",
+    "sha256": "935064E41AE02CD2D10F4788EFAD8BCECF190BD618FDFDE8279531BBA0CEC7A4"
+  },
+  {
+    "path": "src\\useScrollCardLimit.ts",
+    "sha256": "F3902943E964BCC2C3A64CF38C7BD7A88C2D453A80016D8A770F8750B7E5BC2C"
+  },
+  {
+    "path": "src\\assets\\fonts\\inter-cyrillic-wght-normal.woff2",
+    "sha256": "71D5EE93CC1E9F1D520A3A8B66456DE18C7879D8DF09D57FCD2EAFF75FEF0075"
+  },
+  {
+    "path": "src\\assets\\fonts\\inter-latin-wght-normal.woff2",
+    "sha256": "3100E775E8616CD2611BEECFA23A4263D7037586789B43F035236A2E6FBD4C62"
+  },
+  {
+    "path": "src\\assets\\fonts\\manrope-cyrillic.woff2",
+    "sha256": "C268B459A9329E59FECF39A17618EFD44C71735532048D60B12AAB76A8C14914"
+  },
+  {
+    "path": "src\\assets\\fonts\\manrope-latin.woff2",
+    "sha256": "A30DDCD349703AFF7464C34BEF3FFFDFF405EE50C113440D7C8693C02D210972"
+  },
+  {
+    "path": "src\\assets\\fonts\\OFL-Inter.txt",
+    "sha256": "3B0A5FCA3D17942CDE889069889DEDBBBD075E9B599968C82A95F4D944E9B345"
+  },
+  {
+    "path": "src\\assets\\fonts\\OFL.txt",
+    "sha256": "D6A309FCFB963D329A93BAF9DF66FA5F3C23A4BE2B5F67EDF24D6CAFECDE12AC"
+  },
+  {
+    "path": "src\\auth\\api.ts",
+    "sha256": "CE39D7833FA1ECA51F758DCB122F298EA06C20EB6DC05C1175169EA3F4076D70"
+  },
+  {
+    "path": "src\\auth\\browser-session.ts",
+    "sha256": "DF4D8CA2B12406CD541BC32729DB3E45369D813E82AA38BED74739C18AC502D3"
+  },
+  {
+    "path": "src\\auth\\config.ts",
+    "sha256": "96D4BD6F42D11A921126102F38431DF2349F6B08971E9BBC32B79046D57A8CB5"
+  },
+  {
+    "path": "src\\auth\\registration.ts",
+    "sha256": "1662017F90FB721FBC9A858AE3157A61F7203A0FC87874018EF8B1570ED872AB"
+  },
+  {
+    "path": "src\\auth\\session.ts",
+    "sha256": "E38C1C652798CABF9BECB785F847634A1B0436B5A415D08E1B18746331C1614E"
+  },
+  {
+    "path": "src\\cabinet\\api.ts",
+    "sha256": "0FFC8390D0511F9E813CEDA4C70C1D703CFF53597545CFCC07684B609FEA45FE"
+  },
+  {
+    "path": "src\\cabinet\\balance-options.ts",
+    "sha256": "1E444BAD7616051B4814A87099AA41FD9CDFE04BB5B9406F70BD24223080398E"
+  },
+  {
+    "path": "src\\cabinet\\BalanceMenu.tsx",
+    "sha256": "2579372174E7CE0DC6FE0F6204622F0BF371AA71BCAD38F1C23E4F530414D987"
+  },
+  {
+    "path": "src\\cabinet\\CabinetHome.tsx",
+    "sha256": "2EFCECAAB9AD083CEACB4D991579E93A6E710898BA4C1DA26A10BD9A286E2362"
+  },
+  {
+    "path": "src\\cabinet\\CabinetShell.tsx",
+    "sha256": "2F3BAC60F134CEFE5D5EA27A124B34C8D1456C5F16EFDCB55E98FA2E6814B8F5"
+  },
+  {
+    "path": "src\\cabinet\\CurrencyIcon.tsx",
+    "sha256": "73D0860D2B0206CD21C83D11DC8EBA3EA997906E888A984564B9B5D9300EA82B"
+  },
+  {
+    "path": "src\\cabinet\\home.css",
+    "sha256": "EDCD7125F5196FED6AAD11AF1C64B44B8276588837B0C1EC9AC16BE8A0DEF3E1"
+  },
+  {
+    "path": "src\\cabinet\\Icons.tsx",
+    "sha256": "E880A372C40C8EBE54F8AA6FD422FE465E5A10057E07CBF5FD7D636AF8AFD064"
+  },
+  {
+    "path": "src\\cabinet\\modal.ts",
+    "sha256": "A857E4F2B065BDF824C96BE2BC1D908A190E4F450B8D371BA3B7153303B1B8E4"
+  },
+  {
+    "path": "src\\cabinet\\MoneySoon.tsx",
+    "sha256": "21FBA29C4279037570EC5A4888864442E943CFD3BC2674CD7CEA1BCC220C0261"
+  },
+  {
+    "path": "src\\cabinet\\router.ts",
+    "sha256": "E73465905E4B390DB4F74E3D128B41FAC199703847EF530FED1932E2CDDA2BB2"
+  },
+  {
+    "path": "src\\cabinet\\section-context.ts",
+    "sha256": "526F9C4486302D7E0A69B7CA46A9427D2201EC553E26AE959F522CA821EE4E83"
+  },
+  {
+    "path": "src\\cabinet\\section-types.ts",
+    "sha256": "75A7D37183C7AA0480BC6C75EFE33F00416E018555172E56D9E870F975DDA1CF"
+  },
+  {
+    "path": "src\\cabinet\\SectionEntry.tsx",
+    "sha256": "E6C4C5856850CEEE1EA4D190C44238623DD761AE27678499A39BC02415D62B5A"
+  },
+  {
+    "path": "src\\cabinet\\sections.tsx",
+    "sha256": "A76A80CF91715D73FBA8AF1F88305D133527372D9337BC7EEA8DF58D023CB8CA"
+  },
+  {
+    "path": "src\\cabinet\\shared.tsx",
+    "sha256": "9656331BEE6EA8C39C39EE749C5DDCA395960C2C03B01E30C8B5CCBD929F931E"
+  },
+  {
+    "path": "src\\cabinet\\useOverlay.ts",
+    "sha256": "72DB590598F9E447A2FE6300CD731184FA563B04D41629BCE20976786FC40029"
+  },
+  {
+    "path": "src\\cabinet\\useResource.ts",
+    "sha256": "5EB58363DF9A3566F4C38BE3E765C10281E110E4F566E205E9AB3BD70C71895F"
+  },
+  {
+    "path": "src\\cabinet\\deposit\\api.ts",
+    "sha256": "77E0A1A8EDD7A34F4B6DDA7E65D395A4CFB02CD92345CE004BA11EF406F611E5"
+  },
+  {
+    "path": "src\\cabinet\\deposit\\CurrencyIcon.tsx",
+    "sha256": "737BD37A7F2222B2C2291DE935AB7618B95639F2F20DF9FE9DC07CE8172A3FC7"
+  },
+  {
+    "path": "src\\cabinet\\deposit\\deposit.css",
+    "sha256": "91C95591606F1D3B5F0CF8B6BD6ECA815EFFE99DD18C915D3151AA5806999933"
+  },
+  {
+    "path": "src\\cabinet\\deposit\\DepositForm.tsx",
+    "sha256": "3E457FE8F8D610027654B23EA785BFD338086FAC4AEF58306B2A7ABBCE7AE3C3"
+  },
+  {
+    "path": "src\\cabinet\\deposit\\DepositMethods.tsx",
+    "sha256": "5EF434F7F7C08584FD3124DB1C9DBEA53943AC0E71AEACD61A5B7F1C69CE5881"
+  },
+  {
+    "path": "src\\cabinet\\deposit\\forms-api.ts",
+    "sha256": "83E5D82CE9B6B9410D4655BB25882E96D29A72C01AF8E6C7640F8539CF430F5F"
+  },
+  {
+    "path": "src\\cabinet\\deposit\\forms-model.ts",
+    "sha256": "9B230682CFE2118B0AB637A87FA08A4E84BF3942E7BA9EC4BC1DEAB7DEBA1ECD"
+  },
+  {
+    "path": "src\\cabinet\\deposit\\forms.css",
+    "sha256": "E1B8E3D9CF845C1402903F8BC0F3C907A416312AA48300065F15810DDB9ADB91"
+  },
+  {
+    "path": "src\\cabinet\\deposit\\invoice-pdf.ts",
+    "sha256": "606640AE6B3E91BC3EC564D3DC3897230917F0144313E246044FDD77E297E1EA"
+  },
+  {
+    "path": "src\\cabinet\\deposit\\model.ts",
+    "sha256": "17C343FCD4844BAE1D1E56B81A1CBE039211A5A4CE03F4CA702DC1B80BEED887"
+  },
+  {
+    "path": "src\\cabinet\\trading\\api.ts",
+    "sha256": "B42ACEB0F1E9EEDAA3B66D46C00D6D6221F332CCCC1F0A6BDACE48B37F8E3D2C"
+  },
+  {
+    "path": "src\\cabinet\\trading\\model.ts",
+    "sha256": "74BB1949B984E0D7290E2FE9364A37F6C4AEF5A8CC3B642F0B6E9093EA153E85"
+  },
+  {
+    "path": "src\\cabinet\\trading\\trading.css",
+    "sha256": "D037B6705FA27412D64A08A1BF31E88BC321B766811A1DEAC6F9B4AF06DF8FCE"
+  },
+  {
+    "path": "src\\cabinet\\trading\\TradingHistory.tsx",
+    "sha256": "B4FFCD77CD672D6561650403BB1D5F1FAF430B90623790AF74E239BBA4DBDF4D"
+  },
+  {
+    "path": "src\\cabinet\\trading\\TradingSection.tsx",
+    "sha256": "F00A8884CC8BC046BA89CDB102F7DF86F8C2B165D2297A7E756F25E060AE0189"
+  },
+  {
+    "path": "tests\\api-version.test.mjs",
+    "sha256": "E1BA0C1409B9142515CFF25D665003B54B56682E6E8895906EB0FC5D4F578CCC"
+  },
+  {
+    "path": "tests\\auth.test.mjs",
+    "sha256": "EAC7C7CD06AEF57C18F0D6FE273D17DDFD09350E1C45044D4E3DB7BA9104B06A"
+  },
+  {
+    "path": "tests\\config.test.mjs",
+    "sha256": "19AF0C242C29E8B60955FC9043E6E13E4D6C4AD303F7C81E4DF439C48FAB4AAE"
+  },
+  {
+    "path": "tests\\countries.test.mjs",
+    "sha256": "3607A593F5077581C17271BB3BE00FA0163AA59F76F434E07BB9CE2629CF42A1"
+  },
+  {
+    "path": "tests\\country-picker-ui.html",
+    "sha256": "34DDE276DA396A4A31FE40A44029908A241A0DB88B60F2A4F374FEB63BF835CC"
+  },
+  {
+    "path": "tests\\country-picker-ui.ts",
+    "sha256": "5C38FE9F6A0B892A6BD3EB8797927FF296259D50123025692AEFA9372E1CDD21"
+  },
+  {
+    "path": "tests\\deposit-forms-fixtures.ts",
+    "sha256": "F94B1DBB9C6D9DDF044E38C0B61BCFC7965BA6E0AD6C16E370ECD3BB6396DC49"
+  },
+  {
+    "path": "tests\\deposit-forms-ui.html",
+    "sha256": "162E7B078A3B97257E065AF5DC3C4CAFE83F0BA0B146BE30F911C6B9B80DF5C2"
+  },
+  {
+    "path": "tests\\deposit-forms-ui.ts",
+    "sha256": "E7BFE54607DC7C9C355A7BA61B0B4CD14F898FEB6742A2FB4F1D7EBAD4A94B64"
+  },
+  {
+    "path": "tests\\deposit-forms.test.mjs",
+    "sha256": "38B87B55047E2B6E5F9438D8764146DA0B8B20851E8CD6D57F80017CA740F15D"
+  },
+  {
+    "path": "tests\\deposit-ui.html",
+    "sha256": "F050836A950E187B4F9D7A7CF020A63615350241A589187D71CF12DF7A08B887"
+  },
+  {
+    "path": "tests\\deposit-ui.ts",
+    "sha256": "A3505B447E2399F8AC0FB5AB81C4A5496C38CA634F8EEE37BD3EFE354019908B"
+  },
+  {
+    "path": "tests\\deposit.test.mjs",
+    "sha256": "DB0EADE2BE6BB3ED8C2CE2628BE49D9F9FD7913D7CF76F3C5EDCD5E993CCD327"
+  },
+  {
+    "path": "tests\\home-fixtures.ts",
+    "sha256": "582A5BBAF2F6C01A3DC34D82E6E1F126825E24DF7DD7292787ADF4DFD3841B76"
+  },
+  {
+    "path": "tests\\home-ui.html",
+    "sha256": "B82DF5D658A4D66BA19BC90A5F7862EA615A62C743F4E6F82A404287A8CA7AE6"
+  },
+  {
+    "path": "tests\\home-ui.ts",
+    "sha256": "5EEF0F7FE754B6A31AD23EE483EFC7BBE876EF3D9163602092908BB515BB2092"
+  },
+  {
+    "path": "tests\\home.test.mjs",
+    "sha256": "3B3085B2DE4D3712C799A909ED4BC82A83D9314607EAD1BBDF5BA733F2FCBF28"
+  },
+  {
+    "path": "tests\\integration.html",
+    "sha256": "E56DC9FA83DCA5B2B0833EA5DE25B4E944473C2C1898CF19764A37321B84C861"
+  },
+  {
+    "path": "tests\\integration.ts",
+    "sha256": "E4A9AC7258D476F49C5C00C736D4DA7BA871BD0A0FF75105DD39A871820BF8FB"
+  },
+  {
+    "path": "tests\\login-ui.html",
+    "sha256": "C74DE2392814AA0BB511E08E6149655C2946F43B1759E135B7607F1E5C714246"
+  },
+  {
+    "path": "tests\\login-ui.ts",
+    "sha256": "76F5CC042010374A40F302B7690E919FEA4B5CFE430D0A7C11765F51E2AAC90A"
+  },
+  {
+    "path": "tests\\mfa-ui.html",
+    "sha256": "6AC450BC0F654B64C49E5CE3BCC2FFD01763E41C20BD3D68A4895BD7C40ECDCC"
+  },
+  {
+    "path": "tests\\mfa-ui.ts",
+    "sha256": "875F67FB8CA147D49DBC6E7A5A868EBF64EBA06659AFE117E00AC342A70313BA"
+  },
+  {
+    "path": "tests\\registration.test.mjs",
+    "sha256": "5BB118A33E245C95A5A24E1A0F49784AE8D9C9E6F304352357294920EE651E94"
+  },
+  {
+    "path": "tests\\request-timeout.test.mjs",
+    "sha256": "33D22AD20C17C0FFC8C739282F704633075CD570D57997204E3D62A22F646F8D"
+  },
+  {
+    "path": "tests\\router-ui.html",
+    "sha256": "31BA2EF4456A9BE38F4F0AC3FC147DE06D7A210767431EC6226D95315B20C22E"
+  },
+  {
+    "path": "tests\\router-ui.ts",
+    "sha256": "7D291F63275702596B9625394E7CEE112952441DA1A4C5BF521E8F8F596EE612"
+  },
+  {
+    "path": "tests\\router.test.mjs",
+    "sha256": "C9C614AEA1879AE57D68BD24F5DC5BFB84875995F71AFE1F8AB607EE7457AF18"
+  },
+  {
+    "path": "tests\\scroll-ui.html",
+    "sha256": "BD29923E8193510DCA9AA410CC3436F04DB80650233A1F085F7C64852271585D"
+  },
+  {
+    "path": "tests\\scroll-ui.ts",
+    "sha256": "5630A0E711C09D3FEACA9AB7CF62F2CBAD55FE05B486150AAD7C7A1BAC65C401"
+  },
+  {
+    "path": "tests\\session-observer.html",
+    "sha256": "8108754194D54E944A962F43ED3D9350C5EFFA8B1E015CBEA6CA2F5429DE2DBB"
+  },
+  {
+    "path": "tests\\session-observer.ts",
+    "sha256": "ED419290AF59BD7A82E5D42D41EF9A24C59869B8CD1BD15AFF48853ED892C154"
+  },
+  {
+    "path": "tests\\trading-fixtures.ts",
+    "sha256": "E9FD69CC2B9CECDB0F564CBF702C8DBC3EA1A7B7A1155777053C84AFED5B8574"
+  },
+  {
+    "path": "tests\\trading-ui.html",
+    "sha256": "989E0056A136B76DCD65963612ED8ED92AC6701C31EA2DA51748189772953671"
+  },
+  {
+    "path": "tests\\trading-ui.tsx",
+    "sha256": "040DB1ED8EF6DDA08D3F72F3E36B6EABD800EB51E937481CABE7389F3C2743C0"
+  },
+  {
+    "path": "tests\\trading.test.mjs",
+    "sha256": "D872AA850DC37C07D5074C24FA8626C959342A4036A1936EBC613333D9B818A7"
+  },
+  {
+    "path": "tests\\type-motion.test.mjs",
+    "sha256": "648A11B3CC89175FAD690E26DACF5726C36830CCE32D5DBE3F59409093587D4F"
+  }
+]

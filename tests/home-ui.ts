@@ -1,6 +1,7 @@
 import { act, createElement } from 'react'
 import { createRoot } from 'react-dom/client'
-import { dateLabel } from '../src/cabinet/api'
+import { CurrencySelectionSuperseded, balanceView, dateLabel } from '../src/cabinet/api'
+import { BalanceMenu } from '../src/cabinet/BalanceMenu'
 import { CabinetShell as CabinetHome } from '../src/cabinet/CabinetShell'
 import { fixture, operations } from './home-fixtures'
 import '../src/styles.css'
@@ -21,6 +22,7 @@ const onLost = () => { lost++ }
 const onLogout = () => { loggedOut++ }
 async function mount(mode = 'data', history?: unknown[]) {
   current = fixture(mode, mode === 'long' ? operations.map(operation => ({ ...operation, amount: 12345678.12345678, currency: { code: 'BTC', precision: 8 } })) : history); lost = 0; loggedOut = 0
+  if (mode === 'superseded') current.home.selectCurrency = async () => { throw new CurrencySelectionSuperseded() }
   if (mode === 'zero') current.state.balances = current.state.balances.map(b => ({ ...b, available: 0, reserved: 0 }))
   if (mode === 'long') current.state.balances = [{ available: 12345678.12345678, reserved: 0, currency: { code: 'BTC', precision: 8 }, currencyRate: 1, defaultDomainCurrencyCode: 'BTC' }]
   if (mode === 'many') current.state.balances = ['USD', 'EUR', 'JPY', 'CHF', 'RUB', 'CNY', 'AUD', 'CAD', 'BTC', 'ETH', 'USDT', 'USDC', 'LTC', 'XRP', 'SOL', 'ADA', 'DOT', 'DOGE', 'BCH', 'ETC'].map((code, i) => ({ available: i < 8 ? 100 - i : i === 8 ? 0.0154 : 0, reserved: 0, currency: { code, precision: i < 8 ? 2 : 8 }, currencyRate: 1, defaultDomainCurrencyCode: 'USD' }))
@@ -41,6 +43,33 @@ async function press(target: HTMLElement, key: string, shiftKey = false) { await
 async function check(name: string, fn: () => Promise<void>) { await fn(); messages.push('PASS ' + name); output.textContent = messages.join('\n') }
 
 async function run() {
+  await check('currency menu without a default focuses the first option on the second level', async () => {
+    await mount('no-default')
+    assert(current.state.balances.every(balance => balance.defaultDomainCurrencyCode === undefined) && !current.state.setting, 'Fixture has a default')
+    await click('.home-balance-trigger')
+    get('.home-balance-setting').focus()
+    await click('.home-balance-setting')
+    assert(!document.querySelector('[role="option"][aria-selected="true"]'), 'Invented selected currency')
+    assert(document.activeElement === get('[role="option"]'), 'First option did not receive focus')
+  })
+  await check('currency menu without options focuses the back button', async () => {
+    await act(async () => root.render(createElement(BalanceMenu, { view: balanceView([], undefined, []), busy: false, chooseRow: () => {}, chooseTotal: async () => {}, close: () => {}, trigger: null })))
+    await click('.home-balance-setting')
+    assert(!document.querySelector('[role="option"]'), 'Unexpected currency option')
+    assert(document.activeElement === get('.home-balance-back'), 'Back button did not receive focus')
+  })
+  await check('superseded currency selection stays silent in MainBalance', async () => {
+    await mount('superseded'); await click('.home-balance-trigger'); await click('.home-balance-setting')
+    await click('.home-total-option[aria-selected="false"]')
+    assert(!document.querySelector('.home-balance [role="alert"]'), 'Superseded choice reported a save error')
+    assert(get('.home-balance-amount b').textContent === '11 915,00 USD', 'Superseded choice changed the balance')
+  })
+  await check('unknown currency BYN keeps an accessible name on both menu levels', async () => {
+    await mount('unknown-currency'); await click('.home-balance-trigger')
+    assert(get('.home-balance-option:nth-of-type(2) .home-balance-option-name').textContent?.includes('BYN'), 'First level lacks BYN')
+    await click('.home-balance-setting')
+    assert(get('.home-total-option .home-balance-option-name').textContent === 'BYN', 'Second level lacks BYN')
+  })
   await check('new client: empty balance/operations/accounts with no invented currency', async () => { await mount('new'); assert(document.body.textContent?.includes('Операций пока нет'), 'No empty operations'); assert(document.body.textContent?.includes('Торговых счетов нет'), 'No empty accounts'); assert(get('.home-balance-amount').textContent === '0', 'Invented currency') })
   await check('data: independent successful blocks and cached summary', async () => { await mount(); assert(visible('.home-table tbody tr').length === operationCount, 'History rows'); assert(document.querySelectorAll('.home-accounts .home-list-row').length === 2, 'Real accounts'); assert(current.state.calls.filter(c => c.path === '/user/account/summary').length === 1, 'Repeated summary'); assert(!document.body.textContent?.includes('TEST-DEMO'), 'Demo leaked'); assert(get('.home-inactive').textContent?.includes('Неактивен'), 'Inactive account') })
   await check('H1: raw operation/payment codes choose the same icon in rows and details, unknown codes retain sign fallback', async () => {
@@ -188,7 +217,9 @@ async function run() {
       await mount(mode); assert(get(block).querySelector('[role="alert"]'), 'Missing block error')
       assert(document.querySelectorAll('[role="alert"]').length === 1, 'Other blocks lost')
       const before = current.state.calls.length; await act(async () => { await new Promise(r => setTimeout(r, 50)) }); assert(current.state.calls.length === before, 'Automatic retry')
-      current.state.mode = 'data'; await click(block + ' .home-error button'); assert(!get(block).querySelector('[role="alert"]'), 'Retry failed')
+      current.state.mode = 'data'; await click(block + ' .home-error button')
+      for (let attempt = 0; attempt < 100 && get(block).querySelector('[role="alert"]'); attempt++) await act(async () => { await new Promise(resolve => setTimeout(resolve, 10)) })
+      assert(!get(block).querySelector('[role="alert"]'), 'Retry failed')
       assert(!current.state.calls.slice(before).some(c => mode !== 'balance-error' && c.path === '/user/account/balance'), 'Unrelated balance reloaded')
     })
   }

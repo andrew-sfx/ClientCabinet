@@ -104,9 +104,12 @@ export function realAccountNumbers(summary: AccountSummary, details: unknown): s
     return isFalse(account.isDemo) && isFalse(account.isArchived) ? [candidate.accountNumber!] : []
   })
 }
+export class CurrencySelectionSuperseded extends Error {}
 export class HomeApi {
   private api: CabinetApi
   private session: Session
+  private savingCurrency: Promise<void> = Promise.resolve()
+  private currencySelection = 0
   constructor(session: Session, api = new CabinetApi()) { this.session = session; this.api = api }
   private assertCurrent(revision: number) {
     if (!this.session.hasSession || this.session.accountRevision !== revision) throw new AuthError('SESSION_EXPIRED')
@@ -133,6 +136,8 @@ export class HomeApi {
   }
   private async setting(): Promise<string | undefined> {
     try {
+      let saving
+      do { saving = this.savingCurrency; await saving } while (saving !== this.savingCurrency)
       const settings = array(await this.get('/user/setting', { keys: totalsSetting })).map(object)
       return text(settings.find(s => s.key === totalsSetting)?.value)
     } catch (error) { optionalFailure(error); return undefined }
@@ -153,13 +158,23 @@ export class HomeApi {
     const revision = this.session.accountRevision
     const selected = balances.find(b => b.currency.code === code)?.currency
     if (!selected) return invalid()
-    await this.session.authenticated(access => this.api.request('/user/setting', {
+    const selection = ++this.currencySelection
+    const saving = this.savingCurrency.then(async () => {
+      this.assertCurrent(revision)
+      await this.session.authenticated(access => this.api.request('/user/setting', {
         method: 'PUT', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ domainName: authConfig.domainName, settings: [{ key: totalsSetting, value: code }] }),
       }, access))
-    this.assertCurrent(revision)
+    })
+    this.savingCurrency = saving.catch(() => {})
+    const assertLatest = () => {
+      this.assertCurrent(revision)
+      if (selection !== this.currencySelection) throw new CurrencySelectionSuperseded()
+    }
+    try { await saving } catch (error) { assertLatest(); throw error }
+    assertLatest()
     const rates = await this.rates(code)
-    this.assertCurrent(revision)
+    assertLatest()
     return balanceView(balances, selected, rates)
   }
   async operations(): Promise<Operation[]> {

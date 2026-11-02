@@ -2,7 +2,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { AuthError, CabinetApi } from '../src/auth/api.ts'
 import { Session, SESSION_EPOCH_KEY, SESSION_KEY } from '../src/auth/session.ts'
-import { HomeApi, balanceView, dateLabel, displayCurrency, feeLabel, identity, money, parseBalances, parseOperations, realAccountNumbers, signedAmount } from '../src/cabinet/api.ts'
+import { CurrencySelectionSuperseded, HomeApi, balanceView, dateLabel, displayCurrency, feeLabel, identity, money, parseBalances, parseOperations, realAccountNumbers, signedAmount } from '../src/cabinet/api.ts'
 import { balanceOptions, currencyGroups, currencyName, excludedLabel } from '../src/cabinet/balance-options.ts'
 import { balances, fixture, operations, summary, usd } from './home-fixtures.ts'
 
@@ -214,4 +214,74 @@ test('A9: rounding boundaries, signs, grouping and fixed main balance', () => {
   assert.equal(signedAmount({ amount: 0.004, positive: false, currency: usd }), '−< 0,01 USD')
   assert.equal(currencyName('AUD'), 'Австралийский доллар')
   assert.equal(currencyName('CAD'), 'Канадский доллар')
+})
+
+function delayedCurrencySave(f, failFirst = false) {
+  let release, started
+  const ready = new Promise(resolve => { started = resolve }), codes = []
+  const api = new CabinetApi(async (input, init) => {
+    if (new URL(String(input)).pathname === '/user/setting' && init?.method === 'PUT') {
+      codes.push(JSON.parse(init.body).settings[0].value)
+      if (codes.length === 1) {
+        await new Promise(resolve => { release = resolve; started() })
+        if (failFirst) return new Response('{}', { status: 503 })
+      }
+    }
+    return f.fetcher(input, init)
+  })
+  return { home: new HomeApi(f.session, api), ready, codes, release: () => release() }
+}
+
+for (const failed of [false, true]) test('currency saves serialize and recover after first PUT ' + (failed ? 'failure' : 'success'), async () => {
+  const f = fixture(), delayed = delayedCurrencySave(f, failed), rows = parseBalances(balances)
+  const first = assert.rejects(delayed.home.selectCurrency(rows, 'EUR'), CurrencySelectionSuperseded)
+  await delayed.ready
+  const second = delayed.home.selectCurrency(rows, 'GBP')
+  await Promise.resolve()
+  assert.deepEqual(delayed.codes, ['EUR'])
+  delayed.release()
+  await first
+  assert.equal((await second).currency.code, 'GBP')
+  assert.deepEqual(delayed.codes, ['EUR', 'GBP'])
+  assert.equal(f.state.setting, 'GBP')
+})
+
+test('balanceSummary reads the server setting only after pending currency PUT', async () => {
+  const f = fixture(), delayed = delayedCurrencySave(f)
+  const saving = delayed.home.selectCurrency(parseBalances(balances), 'EUR')
+  await delayed.ready
+  const reading = delayed.home.balanceSummary(summary)
+  await Promise.resolve()
+  assert.equal(f.state.calls.some(c => c.path === '/user/setting'), false)
+  delayed.release()
+  await saving
+  assert.equal((await reading).currency.code, 'EUR')
+  assert.deepEqual(f.state.calls.filter(c => c.path === '/user/setting').map(c => c.method), ['PUT', 'GET'])
+})
+
+test('a currency result superseded while loading rates is rejected', async () => {
+  const f = fixture()
+  let release, started
+  const ready = new Promise(resolve => { started = resolve })
+  const api = new CabinetApi(async (input, init) => {
+    if (new URL(String(input)).pathname === '/currencyrates' && JSON.parse(init.body).currencyCodesTo[0] === 'EUR') await new Promise(resolve => { release = resolve; started() })
+    return f.fetcher(input, init)
+  })
+  const home = new HomeApi(f.session, api), rows = parseBalances(balances)
+  const first = assert.rejects(home.selectCurrency(rows, 'EUR'), CurrencySelectionSuperseded)
+  await ready
+  assert.equal((await home.selectCurrency(rows, 'GBP')).currency.code, 'GBP')
+  release(); await first
+})
+
+test('balanceSummary also waits for a currency save queued while it was waiting', async () => {
+  const f = fixture(), delayed = delayedCurrencySave(f), rows = parseBalances(balances)
+  const first = assert.rejects(delayed.home.selectCurrency(rows, 'EUR'), CurrencySelectionSuperseded)
+  await delayed.ready
+  const reading = delayed.home.balanceSummary(summary)
+  const second = delayed.home.selectCurrency(rows, 'GBP')
+  delayed.release()
+  await first; await second
+  assert.equal((await reading).currency.code, 'GBP')
+  assert.deepEqual(f.state.calls.filter(c => c.path === '/user/setting').map(c => c.method), ['PUT', 'PUT', 'GET'])
 })

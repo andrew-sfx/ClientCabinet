@@ -315,9 +315,9 @@ export class DepositFormsApi {
       throw new AuthError('STORAGE_UNAVAILABLE')
     }
   }
-  private async markerKey(kind: DepositKind, number: string) {
+  private async markerKey(kind: DepositKind, number: string, currency: string) {
     const bytes = new TextEncoder().encode(
-      JSON.stringify([authConfig.apiUrl, authConfig.domainName, number, kind]),
+      JSON.stringify([authConfig.apiUrl, authConfig.domainName, number, kind, currency]),
     )
     const hash = await crypto.subtle.digest('SHA-256', bytes)
     return (
@@ -327,10 +327,20 @@ export class DepositFormsApi {
       ).join('')
     )
   }
-  async hasUnknown(kind: DepositKind, number: string) {
-    const key = await this.markerKey(kind, number)
+  async hasUnknown(kind: DepositKind, number: string, currency: string) {
+    // Legacy Crypto markers are deliberately never read.
+    if (kind === 'crypto') return false
+    const key = await this.markerKey(kind, number, currency)
     try {
-      return !!this.markerStorage()?.getItem(key)
+      const store = this.markerStorage()
+      const value = store?.getItem(key)
+      if (!value) return false
+      const createdAt = Number(value)
+      if (!Number.isFinite(createdAt) || Date.now() - createdAt >= 15 * 60 * 1000) {
+        store?.removeItem(key)
+        return false
+      }
+      return true
     } catch {
       throw new AuthError('STORAGE_UNAVAILABLE')
     }
@@ -338,6 +348,7 @@ export class DepositFormsApi {
   private async once(
     kind: DepositKind,
     number: string,
+    currency: string,
     body: unknown,
     path: string,
     parse: (value: unknown) => unknown,
@@ -349,22 +360,25 @@ export class DepositFormsApi {
       locks = new Set()
       submitting.set(this.session, locks)
     }
-    const identity = kind + ':' + number
+    const identity = JSON.stringify([kind, number, currency])
     if (locks.has(identity)) throw new AuthError('SUBMIT_IN_PROGRESS')
     locks.add(identity)
     let sent = false
     let store: MarkerStorage | undefined
     try {
-      const key = await this.markerKey(kind, number)
+      const key = await this.markerKey(kind, number, currency)
       this.assertRevision(revision)
-      store = this.markerStorage()
-      if (store?.getItem(key)) throw new OperationUnknown()
+      store = kind === 'wire' ? this.markerStorage() : undefined
+      if (await this.hasUnknown(kind, number, currency)) throw new OperationUnknown()
       signal.throwIfAborted()
-      store?.setItem(key, 'pending')
+      store?.setItem(key, String(Date.now()))
       const client = this.client(signal)
       try {
         const response = await this.session.authenticated((access) => {
-          if (sent) throw new OperationUnknown()
+          if (sent) {
+            if (kind === 'wire') throw new OperationUnknown()
+            throw new AuthError('UNAUTHORIZED', 401)
+          }
           signal.throwIfAborted()
           this.assertRevision(revision)
           sent = true
@@ -379,7 +393,7 @@ export class DepositFormsApi {
         store?.removeItem(key)
         return result
       } catch (error) {
-        if (!sent) {
+        if (!sent || kind === 'crypto') {
           store?.removeItem(key)
           throw error
         }
@@ -412,6 +426,7 @@ export class DepositFormsApi {
     return this.once(
       'crypto',
       account.number,
+      currency.code,
       {
         accountNumber: account.number,
         currencyCode: currency.code,
@@ -446,7 +461,7 @@ export class DepositFormsApi {
       locks = new Set()
       submitting.set(this.session, locks)
     }
-    const preflight = 'wire-preflight:' + account.number
+    const preflight = JSON.stringify(['wire-preflight', account.number, currency.code])
     if (locks.has(preflight)) throw new AuthError('SUBMIT_IN_PROGRESS')
     locks.add(preflight)
     try {
@@ -476,6 +491,7 @@ export class DepositFormsApi {
       return (await this.once(
         'wire',
         account.number,
+        currency.code,
         {
           paymentOptionCode: config.paymentOptionCode,
           paymentDetails: { bankCountry: country.name, bankId },

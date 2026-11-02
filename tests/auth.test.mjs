@@ -2,7 +2,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { CabinetApi, AuthError, errorMessage } from '../src/auth/api.ts'
 import { authConfig } from '../src/auth/config.ts'
-import { Session, SESSION_KEY } from '../src/auth/session.ts'
+import { Session, SESSION_KEY, SESSION_REVOKE_FAILED_KEY } from '../src/auth/session.ts'
 
 const tokens = { access: 'test-access', refresh: 'test-refresh', expiresAt: 3600000 }
 const ticket = { tokens: [
@@ -398,4 +398,60 @@ test('cancelling login while waiting for the state lock sends no password reques
   release(); await hold; await login
   assert.equal(requests, 0)
   assert.equal(JSON.parse(shared.getItem(SESSION_KEY)).access, tokens.access)
+})
+
+for (const failed of [false, true]) test('two tabs: late refresh revoke ' + (failed ? 'failure is shared' : 'success permits logout'), async () => {
+  const shared = storage({...tokens, expiresAt: 1}), lock = mutex(), stateLock = mutex(), revoked = []
+  let release, started
+  const ready = new Promise(resolve => { started = resolve })
+  const api = apiStub({ refresh: () => new Promise(resolve => { release = resolve; started() }), revoke: async access => {
+    revoked.push(access)
+    if (failed && access === 'late-access') throw new AuthError('NETWORK')
+  } })
+  const first = new Session(api, shared, () => 0, lock, stateLock), second = new Session(api, shared, () => 0, lock, stateLock)
+  const checking = assert.rejects(first.check(), { code: 'SESSION_EXPIRED' })
+  await ready
+  const logout = second.logout()
+  await stateLock(async () => {})
+  release({...tokens, access: 'late-access'})
+  await checking
+  assert.equal(await logout, !failed)
+  assert.deepEqual(revoked, ['late-access', tokens.access])
+  assert.equal(shared.getItem(SESSION_KEY), null)
+  assert.equal(shared.getItem(SESSION_REVOKE_FAILED_KEY), null)
+  assert.equal(first.hasSession, false); assert.equal(second.hasSession, false)
+})
+
+for (const operation of ['getItem', 'setItem', 'removeItem']) test('logout survives revoke marker storage failure: ' + operation, async () => {
+  const shared = storage(tokens), original = shared[operation], revoked = []
+  shared[operation] = (key, ...args) => {
+    if (key === SESSION_REVOKE_FAILED_KEY) throw new Error('blocked')
+    return original(key, ...args)
+  }
+  const session = new Session(apiStub({ revoke: async access => { revoked.push(access) } }), shared, () => 0, mutex(), mutex())
+  assert.equal(await session.logout(), false)
+  assert.equal(shared.getItem(SESSION_KEY), null)
+  assert.deepEqual(revoked, [tokens.access])
+})
+
+test('refresh cannot issue an untracked late token when marker storage is blocked', async () => {
+  const shared = storage({...tokens, expiresAt: 1}), set = shared.setItem
+  let refreshes = 0
+  shared.setItem = (key, value) => { if (key === SESSION_REVOKE_FAILED_KEY) throw new Error('blocked'); set(key, value) }
+  const session = new Session(apiStub({ refresh: async () => { refreshes++; return tokens } }), shared, () => 0, mutex(), mutex())
+  await assert.rejects(session.check(), { code: 'STORAGE_UNAVAILABLE' })
+  assert.equal(refreshes, 0)
+  assert.equal(await session.logout(), false)
+  assert.equal(shared.getItem(SESSION_KEY), null)
+})
+
+test('a stale revoke marker cannot affect logout after a new login in another tab', async () => {
+  const shared = storage(tokens), lock = mutex(), stateLock = mutex()
+  shared.setItem(SESSION_REVOKE_FAILED_KEY, '')
+  const first = new Session(apiStub(), shared, () => 0, lock, stateLock)
+  await first.login('test@example.invalid', 'synthetic')
+  const second = new Session(apiStub(), shared, () => 0, lock, stateLock)
+  assert.equal(await second.logout(), true)
+  assert.equal(shared.getItem(SESSION_REVOKE_FAILED_KEY), null)
+  assert.equal(shared.getItem(SESSION_KEY), null)
 })

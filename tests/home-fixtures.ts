@@ -26,7 +26,7 @@ export const operations = [
 export function fixture(initialMode = 'data', history: unknown[] = operations) {
   const state = { mode: initialMode, refreshes: 0, setting: initialMode === 'setting-eur' ? 'EUR' : initialMode === 'setting-unknown' ? 'ZZZ' : '',
     profile: structuredClone(summary), tradingBalance: 1000,
-    balances: initialMode === 'new' ? [] : initialMode === 'missing-default' ? balances.map(balance => ({ ...balance, defaultDomainCurrencyCode: 'AUD' })) : balances,
+    balances: initialMode === 'no-default' ? balances.map(balance => ({ ...balance, defaultDomainCurrencyCode: undefined as string | undefined })) : initialMode === 'unknown-currency' ? [{ ...balances[0], currency: { code: 'BYN', precision: 2 }, defaultDomainCurrencyCode: 'BYN' }] : initialMode === 'new' ? [] : initialMode === 'missing-default' ? balances.map(balance => ({ ...balance, defaultDomainCurrencyCode: 'AUD' })) : balances,
     rates: [{ currencyFrom: 'EUR', currencyTo: 'USD', value: 1.1 }, { currencyFrom: 'USD', currencyTo: 'EUR', value: 0.9 }],
     calls: [] as { path: string; method: string; query: URLSearchParams; body: unknown; access: string | null }[] }
   const fetcher: typeof fetch = async (input, init) => {

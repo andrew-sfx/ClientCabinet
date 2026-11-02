@@ -25,7 +25,7 @@ export interface FormsReader {
     country: DepositData['country'],
     signal: AbortSignal,
   ): Promise<Terms>
-  hasUnknown(kind: DepositKind, number: string): Promise<boolean>
+  hasUnknown(kind: DepositKind, number: string, currency: string): Promise<boolean>
   createAddress(
     selection: Selection,
     signal: AbortSignal,
@@ -386,7 +386,7 @@ function ReadyForm({
     const c = new AbortController()
     Promise.all([
       reader.terms(selection, data.country, c.signal),
-      reader.hasUnknown(kind, selection.account.number),
+      reader.hasUnknown(kind, selection.account.number, selection.currency.code),
     ])
       .then(([terms, unknown]) => {
         if (!c.signal.aborted) setQuote({ key: context, data: terms, unknown })
@@ -407,6 +407,22 @@ function ReadyForm({
       operation.kind === 'unknown' || (quote.key === context && quote.unknown),
     busy = operation.kind === 'pending',
     blocked = busy || !!unknown
+  useEffect(() => {
+    if (!unknown || !selection) return
+    let active = true
+    const timer = window.setInterval(() => {
+      void reader.hasUnknown(kind, selection.account.number, selection.currency.code)
+        .then((pending) => {
+          if (active && !pending) {
+            setOperation({ kind: 'idle' })
+            setQuote((previous) => ({ ...previous, unknown: false }))
+          }
+        }).catch(() => { /* Keep the guard if storage is unavailable. */ })
+    }, 1000)
+    return () => { active = false; window.clearInterval(timer) }
+    // Selection is represented by context.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [reader, context, kind, unknown])
   const conversion = !!(
     account?.currency &&
     currency &&
@@ -429,7 +445,7 @@ function ReadyForm({
     !missingCountry &&
     (kind === 'crypto' || (!amountError && (!conversion || agree)))
   function select(type: typeof modal, key: string) {
-    if (blocked) return
+    if (busy) return
     if (type === 'account') setAccount(key)
     if (type === 'currency') {
       setCurrency(key)
@@ -498,7 +514,7 @@ function ReadyForm({
       type="button"
       className="account-chip"
       data-picker="account"
-      disabled={blocked}
+      disabled={busy}
       onClick={(e) => open('account', e)}
       aria-label={'На счёт: ' + accountLabel}
     >
@@ -715,7 +731,7 @@ function ReadyForm({
                 type="button"
                 data-picker="currency"
                 onClick={(e) => open('currency', e)}
-                disabled={blocked}
+                disabled={busy}
                 aria-label={
                   'Валюта пополнения: ' + (currencyCode || 'выберите')
                 }
@@ -740,7 +756,7 @@ function ReadyForm({
                 className="crypto-currency"
                 type="button"
                 data-picker="currency"
-                disabled={blocked}
+                disabled={busy}
                 onClick={(e) => open('currency', e)}
               >
                 {currency && <CurrencyIcon code={currencyCode} />}
@@ -753,7 +769,7 @@ function ReadyForm({
                   className="network-chip"
                   type="button"
                   data-picker="network"
-                  disabled={blocked || !currency || networks.length < 2}
+                  disabled={busy || !currency || networks.length < 2}
                   onClick={(e) => open('network', e)}
                 >
                   <span>{network?.label ?? 'Выберите сеть'}</span>
@@ -846,7 +862,7 @@ function ReadyForm({
             <button
               type="button"
               className="secondary"
-              disabled={blocked}
+              disabled={busy}
               onClick={() => setRetry((v) => v + 1)}
             >
               Повторить проверку условий
@@ -860,8 +876,7 @@ function ReadyForm({
         )}
         {unknown && (
           <p className="form-error" role="alert">
-            Результат предыдущего запроса неизвестен. Проверьте историю операций
-            или обратитесь в поддержку. Повторная отправка заблокирована.
+            Не удалось подтвердить результат. Проверьте последние операции на главной — если операции нет, повторите через 15 минут.
           </p>
         )}
         {!data.currencies.length && (
@@ -880,7 +895,9 @@ function ReadyForm({
           ? kind === 'wire'
             ? 'Создаём инвойс…'
             : 'Получаем адрес…'
-          : 'Продолжить'}
+          : kind === 'crypto' && operation.kind === 'error'
+            ? 'Повторить'
+            : 'Продолжить'}
       </Primary>
       {modal && (
         <Picker

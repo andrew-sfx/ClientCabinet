@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import type { ReactNode } from 'react'
 import { AuthError } from '../auth/api'
-import { HomeApi, dateLabel, feeLabel, money, signedAmount } from './api'
+import { CurrencySelectionSuperseded, HomeApi, dateLabel, feeLabel, money, signedAmount } from './api'
 import type { BalanceView, Operation, TradingAccount } from './api'
 import { Icon } from './Icons'
 import { OverlayScroll } from '../OverlayScroll'
@@ -83,6 +83,7 @@ function MainBalance({ resource, api, onSessionLost }: { resource: ReturnType<ty
       const next = await api.selectCurrency(view.balances, code)
       if (alive.current) { resource.update(next); resource.retry() }
     } catch (error) {
+      if (error instanceof CurrencySelectionSuperseded) return
       if (alive.current) {
         if (error instanceof AuthError && error.code === 'SESSION_EXPIRED') onSessionLost()
         else setSaveError('Не удалось сохранить валюту. Повторите выбор.')

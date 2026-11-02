@@ -48,7 +48,7 @@ async function run() {
   })
 
   const f = fixture(); await f.session.check()
-  const registry = sections.map(section => section.id === 'deposit' ? { ...section, component: undefined, standalone: false } : { ...section })
+  const registry = sections.map(section => ['deposit','trading'].includes(section.id) ? { ...section, component: undefined, standalone: false } : { ...section })
   async function shell() {
     await act(async () => root.render(createElement(CabinetShell, { session: f.session, api: f.home, registry, onSessionLost() {}, onLogout() {} })))
     for (let i = 0; i < 100 && document.querySelector('[aria-busy="true"]'); i++) await act(async () => { await new Promise(resolve => setTimeout(resolve, 10)) })
